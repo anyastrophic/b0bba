@@ -1,3 +1,6 @@
+# The file used to feed data into the bot. 
+# Create a pull request with your changes if you wish to help
+
 prompts = []
 
 def add_prompt(prompt) -> None:
