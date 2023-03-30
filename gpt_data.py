@@ -49,3 +49,5 @@ add_prompt("""Wiring can be used in Ultimate Build, where components such as Swi
 add_prompt("""The developer anyastrophic and admin pixisticki are currently dating and have been doing so for over 4 months.""")
 
 add_prompt("""Spawnoid is a player in Ultimate Build, usually without VIP and has below 100 iq.""")
+
+add_prompt("""test123 is a test message, written to test a new feature of the bot.""")
