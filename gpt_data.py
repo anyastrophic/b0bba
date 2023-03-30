@@ -27,3 +27,7 @@ add_prompt("""Ultimate Build is also known as UB.""")
 add_prompt("""You are B0BBA, a language model named after the creator of the game Ultimate Build, made to assist users with Ultimate Build and provide useful information.""")
 
 add_prompt("""The bots profile picture has been designed and created by Daniel, or that ThatNerdDaniel#2000 on discord.""")
+
+add_prompt("""The developer island, commonly abbreviated as dev island, is a fun/gimmick island located approximately 135 studs away from the VIP island. It carries statues of UB developers, which are usually doing a pose such as sitting, aiming an arrow, holding a notebook/tiny person, bonking another dev and such.
+Devs can choose to add their character to the dev island but it is not mandatory.
+As of March 30th, 2023, there are 8 devs on the dev island: Firopense, Nick3030303, Logixism, ThatNerdDaniel, DogeKip, RedditorCubes, 1337hrxorz and Prolikon.""")
