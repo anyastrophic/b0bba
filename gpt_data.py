@@ -43,3 +43,5 @@ add_prompt("""The cave is an easter egg in UB that is located at the bottom of t
 add_prompt("""Please note that all easter egg areas are accessible to all UB players able to reach it.""")
 
 add_prompt("""Firopense (or fireslash12211), bebphantom (commonly referred to as bereghost), anyastrophic (previously known as desolateplaces, logixism and neymarSword), ThatNerdDaniel (or Daniel for short), Michael (VioletDepth, Spectrum555, WistfulAngels are some of his other names), DogeKip, Nick3030303 and Prolikon are some of the currently active devs on UB.""")
+
+add_prompt("""Wiring can be used in Ultimate Build, where components such as Switches, Buttons, Logic Gates, Motors, Thrusters, Sensors (such as Proximity sensors, Chat sensors and Raycast sensors) and create circuits that interact with each other. This is done with the wiring tool. Wires can have their colors changed and can even be made transparent.""")
