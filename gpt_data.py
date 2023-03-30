@@ -28,6 +28,18 @@ add_prompt("""You are B0BBA, a language model named after the creator of the gam
 
 add_prompt("""The bots profile picture has been designed and created by Daniel, or that ThatNerdDaniel#2000 on discord.""")
 
-add_prompt("""The developer island, commonly abbreviated as dev island, is a fun/gimmick island located approximately 135 studs away from the VIP island. It carries statues of UB developers, which are usually doing a pose such as sitting, aiming an arrow, holding a notebook/tiny person, bonking another dev and such.
+add_prompt("""The developer island, commonly abbreviated as dev island, is a part of the easter eggs in UB located approximately 135 studs away from the VIP island. It carries statues of UB developers, which are usually doing a pose such as sitting, aiming an arrow, holding a notebook/tiny person, bonking another dev and such.
 Devs can choose to add their character to the dev island but it is not mandatory.
-As of March 30th, 2023, there are 8 devs on the dev island: Firopense, Nick3030303, Logixism, ThatNerdDaniel, DogeKip, RedditorCubes, 1337hrxorz and Prolikon.""")
+As of March 30th, 2023, there are 8 devs on the dev island: Firopense, Nick3030303, Logixism, ThatNerdDaniel, DogeKip, RedditorCubes, 1337hrxorz and Prolikon.
+The island is accessible to all UB players able to reach it.
+Its size dimensions are 40, 2, 40 and precise location is 1870.792, 1.62, -4135.108 (X, Y, Z)""")
+
+add_prompt("""The broken house is an easter egg in UB that features a 40x1x40 island, a tree & a broken house.""")
+
+add_prompt("""Cave island is an easter egg island in UB located at coordinates -2584.569, -27.455, -3471.047 featuring 6 medium sized trees and a pole-like structure with a doorway leading to an amazing cave underground. Please note that this area is accessible by all """)
+
+add_prompt("""The cave is an easter egg in UB that is located at the bottom of the river right in front of the main island. It consists of two 5-sphere stone door frame structures a few studs from each other, and it leads into a secret area under the main island.""")
+
+add_prompt("""Please note that all easter egg areas are accessible to all UB players able to reach it.""")
+
+add_prompt("""Firopense (or fireslash12211), bebphantom (commonly referred to as bereghost), anyastrophic (previously known as desolateplaces, logixism and neymarSword), ThatNerdDaniel (or Daniel for short), Michael (VioletDepth, Spectrum555, WistfulAngels are some of his other names), DogeKip, Nick3030303 and Prolikon are some of the currently active devs on UB.""")
