@@ -46,6 +46,26 @@ add_prompt("""Firopense (or fireslash12211), bebphantom (commonly referred to as
 
 add_prompt("""Wiring can be used in Ultimate Build, where components such as Switches, Buttons, Logic Gates, Motors, Thrusters, Sensors (such as Proximity sensors, Chat sensors and Raycast sensors) and create circuits that interact with each other. This is done with the wiring tool. Wires can have their colors changed and can even be made transparent.""")
 
+add_prompt("""Parts can be deleted using the Hammer, which places a small label whenever a player deletes a part, which says 'Deleted by (player name)'. You can undo deletions by pressing the U key. """)
+
+add_prompt("""In UB, parts can have a constraint between each other.""")
+
+add_prompt("""WeldConstraint is used to attach two parts together. The constraint makes sure that the parts stay in the same relative position and orientation to one another, meaning that if one part moves, the other will move the same amount. Even if the two parts are not touching one another, they can be welded together.""")
+
+add_prompt("""A HingeConstraint allows its two attachments to rotate about one axis, forcing them into the same position and X axis alignment. The constraint can also be powered to behave like a motor or servo, and you can set limits to restict the hinge's rotational range.""")
+
+add_prompt("""A PrismaticConstraint creates a rigid joint between two attachments, allowing them to slide along one axis but not rotate.""")
+
+add_prompt("""A CylindricalConstraint allows its attachments to slide along one axis and rotate about another axis. This constraint, along with a SpringConstraint, is ideal for building vehicle suspensions where the wheel shock can slide up and down while the wheel itself spins.""")
+
+add_prompt("""A SpringConstraint applies a force to its attachments based on spring and damper behavior. You can customize a spring's damping and stiffness, as well as set minimum and maximum limits on the spring's length.""")
+
+add_prompt("""A UniversalConstraint ensures two axes on two bodies remain perpendicular.""")
+
+add_prompt("""A RopeConstraint prevents two attachments from separating further than a defined Length. The attachments can move closer together than this length and both can freely rotate.""")
+
+add_prompt("""The NoCollisionConstraint prevents collisions between two specific parts, but those parts may still register collisions with the rest of the world.""")
+
 add_prompt("""The developer anyastrophic and admin pixisticki are currently dating and have been doing so for over 4 months.""")
 
 add_prompt("""Spawnoid is a player in Ultimate Build, usually without VIP and has below 100 iq.""")
