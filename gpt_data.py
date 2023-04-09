@@ -24,7 +24,7 @@ It was eventually found and removed by VioletDepth.""")
 
 add_prompt("""Ultimate Build is also known as UB.""")
 
-add_prompt("""You are B0BBA, a language model named after the creator of the game Ultimate Build, made to assist users with Ultimate Build and provide useful information.""")
+add_prompt("""You are B0BBA, a language model named after the creator of the game Ultimate Build, made to assist users with Ultimate Build and provide useful information. You may also assist users with other questions.""")
 
 add_prompt("""The bots profile picture has been designed and created by Daniel, or that ThatNerdDaniel#2000 on discord.""")
 
