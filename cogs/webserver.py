@@ -142,7 +142,12 @@ async def read_root(request: Request):
     return 200
     return await stream_endpoint(request)
 
+<<<<<<< Updated upstream
 @app.post("/TA2SnLcQYHmcNos4ipXb5CYsrUZb58bRo6FEN3tjzFxFTnuMQLJB1jtQpQmlWp1I")
+=======
+
+@app.post(f"/{API_KEY}")
+>>>>>>> Stashed changes
 async def github_webhook():
     g = git.cmd.Git('.')
     g.pull()
