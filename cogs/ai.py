@@ -1,5 +1,6 @@
 """The AI module of B0BBA"""
 
+import traceback
 import logging
 import secrets
 import os
@@ -60,7 +61,7 @@ class AI(commands.Cog, name="ai"):
 
             logging.getLogger("b0bba.ai.gpt").error(
                 "Error occured while trying to get a prompt! Traceback: %s",
-                Exception.__traceback__,
+                traceback.format_exc(),
             )
 
     @app_commands.command()
