@@ -12,6 +12,7 @@ with open(f"./games/wordle/words.txt", "r") as f:
 
     f.close()
 
+
 class WordleGame:
     def __init__(self, owner: str) -> None:
         self.owner = owner
@@ -19,9 +20,9 @@ class WordleGame:
         self.guesses = []
 
     async def generate_emoji_word(self, guess: str):
-        yellow = '🟨'
-        green = '🟩'
-        grey = '⬜'
+        yellow = "🟨"
+        green = "🟩"
+        grey = "⬜"
 
         letters = {}
 
@@ -44,10 +45,10 @@ class WordleGame:
 
         return string + " " + " ".join(guess)
 
-    async def get_output(self, type = "mid-game") -> str:
+    async def get_output(self, type="mid-game") -> str:
         string = ""
 
-        black = '⬛'
+        black = "⬛"
 
         for i in self.guesses:
             string += f"\n{await self.generate_emoji_word(i)}"
@@ -61,17 +62,19 @@ class WordleGame:
             return f"{self.owner}'s wordle!\nYou lost!\nThe wordle:{string}\nThe word was: {self.word}"
         elif type == "win":
             return f"{self.owner}'s wordle!\nYou won!\nThe wordle:{string}\nThe word was: {self.word}"
-    
+
     async def guess(self, guess: str):
-        if not guess in valid_words: return 'mid-game'
+        if not guess in valid_words:
+            return "mid-game"
 
         self.guesses = self.guesses + [guess]
 
         if guess == self.word:
-            return 'win'
+            return "win"
 
-        if len(self.guesses) == 6: return 'lose'
-        
+        if len(self.guesses) == 6:
+            return "lose"
+
         # nothing returned, so return mid-game
 
-        return 'mid-game'
+        return "mid-game"

@@ -7,11 +7,18 @@ import discord
 from discord import app_commands
 from discord.ext import commands, tasks
 
-from modules.economy_utils import probably, get_stock_info, get_rarity # pylint: disable=import-error
-from modules.database_utils import Registration, get_marketplace_listings # pylint: disable=import-error
+from modules.economy_utils import (
+    probably,
+    get_stock_info,
+    get_rarity,
+)  # pylint: disable=import-error
+from modules.database_utils import (
+    Registration,
+    get_marketplace_listings,
+)  # pylint: disable=import-error
 
-from modules.enums import Enum # pylint: disable=import-error
-from modules.loggers import Logger # pylint: disable=import-error
+from modules.enums import Enum  # pylint: disable=import-error
+from modules.loggers import Logger  # pylint: disable=import-error
 
 exchange_values = {"TempleCoin": {"deletes": 1337, "copies": 1337}}
 
@@ -67,26 +74,28 @@ async def update_exchange_rates(bot):
     if round(exchange_values["TempleCoin"]["copies"]) != round(copies_price):
         Logger.Economy.Misc.ExchangeRatesUpdated(copies_price, deletes_price)
 
-    exchange_values["TempleCoin"] = {"copies": copies_price, "deletes": deletes_price}
+    exchange_values["TempleCoin"] = {
+        "copies": copies_price, "deletes": deletes_price}
 
 
 class Economy(commands.Cog, name="economy"):
     """Economy module"""
-    
+
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
         """A function that's called upon the Economy module starting up"""
-        self.update_exchange.start() # pylint: disable=no-member
+        self.update_exchange.start()  # pylint: disable=no-member
 
     @tasks.loop(seconds=30.0)
     async def update_exchange(self):
         """Update exchange rates (task)"""
         await update_exchange_rates(self.bot)
 
-    item_commands = app_commands.Group(name="item", description="Commands for items")
+    item_commands = app_commands.Group(
+        name="item", description="Commands for items")
 
     @item_commands.command(name="info", description="Get info about an item")
     async def _item_info(self, interaction: discord.Interaction, item: str) -> None:
@@ -274,7 +283,8 @@ class Economy(commands.Cog, name="economy"):
                     return
 
                 await self.bot.db.economy.update_one(  # clear target's copies and deletes (use item)
-                    {"discord_id": target.id}, {"$set": {"copies": 0, "deletes": 0}}
+                    {"discord_id": target.id}, {
+                        "$set": {"copies": 0, "deletes": 0}}
                 )
 
                 await interaction.response.send_message(
@@ -341,7 +351,8 @@ class Economy(commands.Cog, name="economy"):
 
         user_data = await self.bot.db.economy.find_one({"discord_id": user.id})
 
-        embed = discord.Embed(title=f"{user}'s stats", colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(
+            title=f"{user}'s stats", colour=Enum.Embeds.Colors.Info)
 
         embed.add_field(
             name="Reputation", value=round(user_data["reputation"], 2), inline=False
@@ -349,7 +360,8 @@ class Economy(commands.Cog, name="economy"):
 
         embed.add_field(name="Copies", value=user_data["copies"], inline=False)
 
-        embed.add_field(name="Deletes", value=user_data["deletes"], inline=False)
+        embed.add_field(
+            name="Deletes", value=user_data["deletes"], inline=False)
 
         inventory = ""
         for key, value in user_data["inventory"].items():
@@ -357,7 +369,8 @@ class Economy(commands.Cog, name="economy"):
                 if key == "TempleCoin":
                     value = round(value, 2)
 
-                inventory = inventory + f"**{key}**: `{value}` | `{ITEMS[key]}`\n"
+                inventory = inventory + \
+                    f"**{key}**: `{value}` | `{ITEMS[key]}`\n"
 
         stocks = ""
         for key, value in user_data["stocks"].items():
@@ -387,7 +400,8 @@ class Economy(commands.Cog, name="economy"):
         choices = random.choices(["u", "b"], k=random.randint(10, 15))
 
         original_string = " ".join(choices)
-        fake_string = f" {ZERO_WIDTH_SPACE * random.randint(2, 10)}".join(choices)
+        fake_string = f" {ZERO_WIDTH_SPACE * random.randint(2, 10)}".join(
+            choices)
 
         def check(m):
             return m.author == interaction.user and m.channel == interaction.channel
@@ -588,8 +602,6 @@ class Economy(commands.Cog, name="economy"):
     @app_commands.checks.cooldown(1, 86400)
     async def report(self, interaction: discord.Interaction):
         """report a user for free reputation (economy)"""
-        
-        
 
         add_reputation = 1
 
@@ -865,8 +877,10 @@ class Economy(commands.Cog, name="economy"):
             return
 
         if (
-            buyer_registration["inventory"].get(item, None) is not None
-        ) and listing_id.startswith("LIMITED_") or (amount > 1 and listing_id.startswith("LIMITED_")):
+            (buyer_registration["inventory"].get(item, None) is not None)
+            and listing_id.startswith("LIMITED_")
+            or (amount > 1 and listing_id.startswith("LIMITED_"))
+        ):
             await interaction.response.send_message(
                 "This item is limited and therefore can't be purchased more than once!",
                 ephemeral=True,
@@ -1008,7 +1022,8 @@ class Economy(commands.Cog, name="economy"):
 
         await self.bot.db.economy.update_one(
             {"discord_id": interaction.user.id},
-            {"$inc": {f'inventory.{listing_data["item"]}': listing_data["stock"]}},
+            {"$inc": {
+                f'inventory.{listing_data["item"]}': listing_data["stock"]}},
         )
 
         await interaction.response.send_message(
