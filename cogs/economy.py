@@ -157,11 +157,6 @@ class Economy(commands.Cog, name="economy"):
         self, interaction: discord.Interaction, stock: str, amount: int = 1
     ):
         """buy a stock"""
-
-        await interaction.response.send_message(
-            "Buying stocks is temporarily disabled!"
-        )
-
         registration = await Registration(interaction.user.id).economy()
 
         stock_info = None
