@@ -1,5 +1,6 @@
 import discord
 
+
 class Placeholder:
     class Games:
         class Hangman:
@@ -18,4 +19,6 @@ class Placeholder:
         class RobloxUtils:
             BadResponse = "Response status != 200.\nPlease contact Anya."
 
-            UsernameNotFound = "The ROBLOX account with the username you provided wasn't found"
+            UsernameNotFound = (
+                "The ROBLOX account with the username you provided wasn't found"
+            )

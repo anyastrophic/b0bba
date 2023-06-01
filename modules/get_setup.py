@@ -1,5 +1,6 @@
 import json
 
+
 def get_setup():
     setup = {}
     with open("setup.json", "r") as f:

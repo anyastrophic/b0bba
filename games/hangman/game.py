@@ -7,10 +7,12 @@ with open(f"./games/words.txt", "r") as f:
 
     f.close()
 
+
 class HangmanLetter:
     def __init__(self, letter) -> None:
         self.letter = letter
         self.uncovered = False
+
 
 class HangmanGame:
     def __init__(self, owner: str) -> None:
@@ -38,20 +40,25 @@ class HangmanGame:
                 word = word + "_"
 
         return word
-    
-    async def get_output(self, type = "mid-game") -> str:
+
+    async def get_output(self, type="mid-game") -> str:
         match type:
             case "mid-game":
-                return Placeholder.Games.Hangman.GameResponses.MidGame.format(self.owner, await self.get_output_word(), self.tries)
+                return Placeholder.Games.Hangman.GameResponses.MidGame.format(
+                    self.owner, await self.get_output_word(), self.tries
+                )
             case "lose":
-                return Placeholder.Games.Hangman.GameResponses.Lose.format(self.owner, self.word)
+                return Placeholder.Games.Hangman.GameResponses.Lose.format(
+                    self.owner, self.word
+                )
             case "win":
-                return Placeholder.Games.Hangman.GameResponses.Win.format(self.owner, self.word)
-            
+                return Placeholder.Games.Hangman.GameResponses.Win.format(
+                    self.owner, self.word
+                )
 
     async def guess(self, guess) -> str:
         if guess.lower() == self.word:
-            return 'win'
+            return "win"
 
         result = False
 
@@ -60,13 +67,15 @@ class HangmanGame:
                 letter_obj.uncovered = True
                 result = True
 
-        if result == False: self.tries -= 1
+        if result == False:
+            self.tries -= 1
 
         if self.tries == 0:
-            return 'lose'
-        
-        if await self.get_output_word() == self.word: return 'win'
+            return "lose"
+
+        if await self.get_output_word() == self.word:
+            return "win"
 
         # nothing returned, so return mid-game
 
-        return 'mid-game'
+        return "mid-game"

@@ -2,6 +2,7 @@ import ast
 import discord
 from discord.ext import commands
 
+
 class Eval:
     def __init__(self, code: str = "return 'OK'"):
         self.code = code
@@ -38,15 +39,15 @@ class Eval:
         await self.insert_returns(body)
 
         env = {
-            'bot': _self.bot,
-            'self': _self,
-            'discord': discord,
-            'commands': commands,
-            'ctx': ctx,
-            '__import__': __import__
+            "bot": _self.bot,
+            "self": _self,
+            "discord": discord,
+            "commands": commands,
+            "ctx": ctx,
+            "__import__": __import__,
         }
         exec(compile(parsed, filename="<ast>", mode="exec"), env)
 
-        result = (await eval(f"{fn_name}()", env))
-        
+        result = await eval(f"{fn_name}()", env)
+
         return result
