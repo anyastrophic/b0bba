@@ -39,7 +39,7 @@ class Roblox(commands.Cog, name="roblox"):
         self.roblox_client: roblox.Client = self.bot.ROBLOX_CLIENT
 
         self.verification_universe: roblox.BaseUniverse = (
-            await self.bot.verification_roblox_client.get_universe(4615409270)
+            await self.bot.verification_roblox_client.get_universe(2970693715)
         )
 
     @app_commands.command()
