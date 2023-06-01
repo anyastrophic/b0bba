@@ -1,5 +1,6 @@
 """The AI module of B0BBA"""
 
+import logging
 import secrets
 import os
 
@@ -15,15 +16,16 @@ from modules.gpt_data import prompts as FED_DATA
 FREE_MODELS = ["gpt-3.5-turbo"]
 BLACKLISTED_WORDS = ["https://", "http://"]
 
+
 class AI(commands.Cog, name="ai"):
     """AI features of B0BBA"""
 
     def __init__(self, bot):
         self.bot = bot
 
-    async def multitoken_gpt(
-        self, interaction, prompt, idx: int = 0
-    ):
+    async def multitoken_gpt(self, interaction, prompt, idx: int = 0):
+        """Uses tokens specified below to answer to the prompt"""
+
         tokens = os.environ.get("OPENAI_KEYS", "").split(",")
 
         messages = FED_DATA
@@ -47,7 +49,7 @@ class AI(commands.Cog, name="ai"):
                 messages=messages,
             )
 
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
             if idx < len(tokens) - 1:
                 await self.multitoken_gpt(
                     interaction=interaction, prompt=prompt, idx=idx + 1
@@ -55,6 +57,10 @@ class AI(commands.Cog, name="ai"):
                 return
 
             await interaction.followup.send("https://http.cat/429")
+
+            logging.getLogger("b0bba.ai.gpt").error(
+                f"Error occured while trying to get a prompt! Traceback: {Exception.__traceback__}"
+            )
 
     @app_commands.command()
     @commands.guild_only()
@@ -68,7 +74,7 @@ class AI(commands.Cog, name="ai"):
             if len(result_string) >= 1900:
                 filename = secrets.token_hex(4)
 
-                with open(f"./temp/{filename}.txt", "w") as file:
+                with open(f"./temp/{filename}.txt", "w", encoding="utf-8") as file:
                     file.write(result_string)
                     file.close()
 

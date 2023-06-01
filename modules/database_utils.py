@@ -36,7 +36,7 @@ class Registration:
                     {"$set": {"luck_addend": random.uniform(1.0, -5.0)}},
                 )
 
-            if not "stocks" in registration:
+            if "stocks" not in registration:
                 await db["economy"].update_one(
                     {"discord_id": self.discord_id}, {"$set": {"stocks": {}}}
                 )

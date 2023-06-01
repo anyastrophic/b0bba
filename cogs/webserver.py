@@ -11,7 +11,7 @@ import git
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from pydantic import BaseModel # pylint: disable=no-name-in-module
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
 from discord.ext import commands
 
@@ -25,26 +25,32 @@ API_KEY = os.environ.get("B0BBA_API_KEY")
 
 BOT = None
 
+
 class Server(BaseModel):
     """Server data sent from ROBLOX"""
+
     age: float | int | None
     players: dict | list
     fps: float | int | None
 
+
 class VerificationRequest(BaseModel):
     """Verification request sent from ROBLOX"""
+
     roblox_id: str
     discord_id: str
+
 
 class Webserver(commands.Cog, name="webserver"):
     """The class containing the webserver functions"""
 
     def __init__(self, _bot):
-        global BOT # pylint: disable=global-statement
+        global BOT  # pylint: disable=global-statement
 
         self.bot = _bot
 
         BOT = _bot
+
 
 async def create_request(_type: str, job_id: str = "global"):
     """Creates request
@@ -88,6 +94,7 @@ async def create_request(_type: str, job_id: str = "global"):
 
     return await wait_for_response()
 
+
 @app.get("/servers/{job_id}")
 async def get_server_info(job_id: str):
     """Gets info about a UB server
@@ -121,6 +128,7 @@ async def read_root():
     """
     return 200
 
+
 @app.post(f"/{API_KEY}")
 async def github_webhook():
     """Github webhook endpoint, currently used to restart the bot on Push"""
@@ -131,6 +139,7 @@ async def github_webhook():
 
     pid = os.getpid()
     os.system(f"taskkill /F /PID {pid}")
+
 
 @app.post("/verify")
 async def verify_endpoint(request: Request, verification_request: VerificationRequest):
@@ -162,7 +171,7 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
     member: discord.Member = BOT.ub_guild.get_member(discord_id)
     role: discord.Role = BOT.ub_guild.get_role(406997457709432862)
 
-    if not role in member.roles:
+    if role not in member.roles:
         await member.add_roles(role)
 
     return JSONResponse(content={"message": "OK"}, status_code=200)

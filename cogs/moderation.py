@@ -22,7 +22,7 @@ class Moderation(commands.Cog, name="moderation"):
             reaction (_type_): The reaction
             user (discord.User): The user
         """
-        if not user in reaction_cache:
+        if user not in reaction_cache:
             reaction_cache[user] = 0
 
         reaction_cache[user] += 1

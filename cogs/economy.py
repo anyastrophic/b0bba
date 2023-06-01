@@ -99,7 +99,7 @@ class Economy(commands.Cog, name="economy"):
 
     @item_commands.command(name="info", description="Get info about an item")
     async def _item_info(self, interaction: discord.Interaction, item: str) -> None:
-        if not item in ITEMS:
+        if item not in ITEMS:
             await interaction.response.send_message("This item doesn't exist!")
 
             return
@@ -140,7 +140,7 @@ class Economy(commands.Cog, name="economy"):
 
         try:
             stock_info = await get_stock_info(stock)
-        except:  # pylint: disable=bare-except
+        except:  # pylint: disable=bare-except  # noqa: E722
             await interaction.response.send_message(
                 "Unable to find stock! Are you entering the name correctly?"
             )
