@@ -39,8 +39,7 @@ class Utility(commands.Cog, name="util"):
                 and not self.battery_debounce
             ):
                 t = threading.Thread(
-                    target=os.system, args=[
-                        "ffplay alert.mp3 -autoexit -nodisp"]
+                    target=os.system, args=["ffplay alert.mp3 -autoexit -nodisp"]
                 )
 
                 t.start()
@@ -109,8 +108,7 @@ class Utility(commands.Cog, name="util"):
 
                 embed.set_thumbnail(url=user_icon_url[0].image_url)
 
-                embed.add_field(name="Roblox ID",
-                                value=f"`{user.id}`", inline=False)
+                embed.add_field(name="Roblox ID", value=f"`{user.id}`", inline=False)
 
                 embed.add_field(
                     name="Is user verified with B0BBA?",

@@ -1,3 +1,5 @@
+"""The roblox module of B0BBA"""
+
 import openai
 import time as _time
 import discord
@@ -6,7 +8,6 @@ import secrets
 import roblox
 import os
 
-from datetime import datetime
 from discord.ext import commands
 from discord import app_commands
 from modules.roblox_utils import Request, get_csrf
@@ -19,7 +20,7 @@ openai.api_key = "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"
 openai.organization = "org-RgAxsUuotwCUDQdjpNfSOvCE"
 
 linking_words = []
-with open(f"./files/verify-words.txt", "r") as f:
+with open("./files/verify-words.txt", "r", encoding="utf-8") as f:
     linking_words = f.read().splitlines()
 
     f.close()
@@ -193,14 +194,13 @@ class Roblox(commands.Cog, name="roblox"):
         else:
             embed = discord.Embed(
                 title="No roles received",
-                description=f"You didn't get any new roles",
+                description="You didn't get any new roles",
                 colour=Enum.Embeds.Colors.Warning,
             )
 
         await interaction.response.send_message(embed=embed)
 
-    server_commands = app_commands.Group(
-        name="servers", description="Server commands")
+    server_commands = app_commands.Group(name="servers", description="Server commands")
 
     @server_commands.command()
     @commands.guild_only()
@@ -209,8 +209,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         servers = await self.place.get_instances()
         servers = servers.collection
-        embed = discord.Embed(title="Game Servers",
-                              colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title="Game Servers", colour=Enum.Embeds.Colors.Info)
 
         for server in servers:
             embed.add_field(
@@ -241,10 +240,9 @@ class Roblox(commands.Cog, name="roblox"):
         fps = server_info["fps"]
         age = server_info["age"]
 
-        embed = discord.Embed(title="Game Server Info",
-                              colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title="Game Server Info", colour=Enum.Embeds.Colors.Info)
         embed.add_field(name="Server ID", value=f"`{server_id}`", inline=False)
-        embed.add_field(name="Max Players", value=f"`20`", inline=False)
+        embed.add_field(name="Max Players", value="`20`", inline=False)
         embed.add_field(
             name="Currently Playing", value=f"`{len(players)}`", inline=False
         )
@@ -254,8 +252,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         await interaction.followup.send(embed=embed)
 
-    report_commands = app_commands.Group(
-        name="reports", description="Reports commands")
+    report_commands = app_commands.Group(name="reports", description="Reports commands")
 
     @report_commands.command()
     @commands.guild_only()
@@ -288,8 +285,7 @@ class Roblox(commands.Cog, name="roblox"):
             colour=Enum.Embeds.Colors.Info,
         )
 
-        embed.add_field(
-            name="Admin", value=interaction.user.mention, inline=False)
+        embed.add_field(name="Admin", value=interaction.user.mention, inline=False)
         embed.add_field(
             name="Report creator",
             value=f"<@{interaction.channel.owner_id}>",
@@ -305,7 +301,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         try:
             await interaction.channel.owner.send(embed=embed)
-        except:
+        except Exception:
             await interaction.channel.send(
                 f"<@{interaction.channel.owner_id}>, your DMs are closed, so I pinged you for your report!"
             )
@@ -323,8 +319,7 @@ class Roblox(commands.Cog, name="roblox"):
             await self.roblox_client.get_user_by_username(interaction.channel.name),
         )
 
-        registration["reports_closed"][str(interaction.channel_id)] = {
-            "expired": False}
+        registration["reports_closed"][str(interaction.channel_id)] = {"expired": False}
 
         await self.bot.db.admins.update_one(
             {"discord_id": interaction.user.id},
@@ -450,8 +445,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         result = await Request().post(
             "https://groups.roblox.com/v1/groups/11205637/payouts",
-            headers={"Cookie": f".ROBLOSECURITY={cookie}",
-                     "x-csrf-token": csrf},
+            headers={"Cookie": f".ROBLOSECURITY={cookie}", "x-csrf-token": csrf},
             json={
                 "PayoutType": "FixedAmount",
                 "Recipients": [
@@ -490,8 +484,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         Logger.Payout.Success(interaction.user, admin)
 
-        embed = discord.Embed(title="Admin payout",
-                              colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title="Admin payout", colour=Enum.Embeds.Colors.Info)
         embed.add_field(name="Admin", value=f"{admin}", inline=False)
         embed.add_field(
             name="Manager, who paid out", value=f"{interaction.user}", inline=False
@@ -535,8 +528,7 @@ class Roblox(commands.Cog, name="roblox"):
 
                 if report:
                     sheet.append(
-                        (str(reportid), str(
-                            report["creator"]), reportdata["verdict"])
+                        (str(reportid), str(report["creator"]), reportdata["verdict"])
                     )
                 else:
                     sheet.append(
@@ -698,8 +690,7 @@ class Roblox(commands.Cog, name="roblox"):
             title="Gamebanned a player", colour=Enum.Embeds.Colors.Info
         )
         embed.add_field(name="Player:", value=target_username, inline=False)
-        embed.add_field(name="Duration:",
-                        value=f"{time} {unit.name}s", inline=False)
+        embed.add_field(name="Duration:", value=f"{time} {unit.name}s", inline=False)
         embed.add_field(name="Reason:", value=reason, inline=False)
 
         admin = await self.roblox_client.get_user(verified["roblox_id"])
@@ -804,8 +795,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         embed.add_field(
             name="Banned until",
-            value="`Not banned`" if (
-                entry[0] == 0) else f"<t:{round(entry[0])}:F>",
+            value="`Not banned`" if (entry[0] == 0) else f"<t:{round(entry[0])}:F>",
             inline=False,
         )
 

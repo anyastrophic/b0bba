@@ -1,3 +1,5 @@
+"""The economy module of B0BBA"""
+
 import random
 
 from typing import List
@@ -11,14 +13,14 @@ from modules.economy_utils import (
     probably,
     get_stock_info,
     get_rarity,
-)  # pylint: disable=import-error
+)
 from modules.database_utils import (
     Registration,
     get_marketplace_listings,
-)  # pylint: disable=import-error
+)
 
-from modules.enums import Enum  # pylint: disable=import-error
-from modules.loggers import Logger  # pylint: disable=import-error
+from modules.enums import Enum
+from modules.loggers import Logger
 
 exchange_values = {"TempleCoin": {"deletes": 1337, "copies": 1337}}
 
@@ -58,9 +60,9 @@ async def update_exchange_rates(bot):
     total_templecoins = 0
 
     result = bot.db.economy.find({}, {})
-    l = await result.to_list(100)
+    _list = await result.to_list(100)
 
-    for document in l:
+    for document in _list:
         if "TempleCoin" in document["inventory"]:
             total_templecoins += document["inventory"]["TempleCoin"]
 
@@ -74,8 +76,7 @@ async def update_exchange_rates(bot):
     if round(exchange_values["TempleCoin"]["copies"]) != round(copies_price):
         Logger.Economy.Misc.ExchangeRatesUpdated(copies_price, deletes_price)
 
-    exchange_values["TempleCoin"] = {
-        "copies": copies_price, "deletes": deletes_price}
+    exchange_values["TempleCoin"] = {"copies": copies_price, "deletes": deletes_price}
 
 
 class Economy(commands.Cog, name="economy"):
@@ -94,8 +95,7 @@ class Economy(commands.Cog, name="economy"):
         """Update exchange rates (task)"""
         await update_exchange_rates(self.bot)
 
-    item_commands = app_commands.Group(
-        name="item", description="Commands for items")
+    item_commands = app_commands.Group(name="item", description="Commands for items")
 
     @item_commands.command(name="info", description="Get info about an item")
     async def _item_info(self, interaction: discord.Interaction, item: str) -> None:
@@ -162,15 +162,13 @@ class Economy(commands.Cog, name="economy"):
             "Buying stocks is temporarily disabled!"
         )
 
-        return
-
         registration = await Registration(interaction.user.id).economy()
 
         stock_info = None
 
         try:
             stock_info = await get_stock_info(stock)
-        except:
+        except Exception:  # pylint: disable=broad-exception-caught
             await interaction.response.send_message(
                 "Unable to find stock! Are you entering the name correctly?"
             )
@@ -283,8 +281,7 @@ class Economy(commands.Cog, name="economy"):
                     return
 
                 await self.bot.db.economy.update_one(  # clear target's copies and deletes (use item)
-                    {"discord_id": target.id}, {
-                        "$set": {"copies": 0, "deletes": 0}}
+                    {"discord_id": target.id}, {"$set": {"copies": 0, "deletes": 0}}
                 )
 
                 await interaction.response.send_message(
@@ -351,8 +348,7 @@ class Economy(commands.Cog, name="economy"):
 
         user_data = await self.bot.db.economy.find_one({"discord_id": user.id})
 
-        embed = discord.Embed(
-            title=f"{user}'s stats", colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title=f"{user}'s stats", colour=Enum.Embeds.Colors.Info)
 
         embed.add_field(
             name="Reputation", value=round(user_data["reputation"], 2), inline=False
@@ -360,8 +356,7 @@ class Economy(commands.Cog, name="economy"):
 
         embed.add_field(name="Copies", value=user_data["copies"], inline=False)
 
-        embed.add_field(
-            name="Deletes", value=user_data["deletes"], inline=False)
+        embed.add_field(name="Deletes", value=user_data["deletes"], inline=False)
 
         inventory = ""
         for key, value in user_data["inventory"].items():
@@ -369,8 +364,7 @@ class Economy(commands.Cog, name="economy"):
                 if key == "TempleCoin":
                     value = round(value, 2)
 
-                inventory = inventory + \
-                    f"**{key}**: `{value}` | `{ITEMS[key]}`\n"
+                inventory = inventory + f"**{key}**: `{value}` | `{ITEMS[key]}`\n"
 
         stocks = ""
         for key, value in user_data["stocks"].items():
@@ -400,11 +394,10 @@ class Economy(commands.Cog, name="economy"):
         choices = random.choices(["u", "b"], k=random.randint(10, 15))
 
         original_string = " ".join(choices)
-        fake_string = f" {ZERO_WIDTH_SPACE * random.randint(2, 10)}".join(
-            choices)
+        fake_string = f" {ZERO_WIDTH_SPACE * random.randint(2, 10)}".join(choices)
 
-        def check(m):
-            return m.author == interaction.user and m.channel == interaction.channel
+        def check(msg):
+            return msg.author == interaction.user and msg.channel == interaction.channel
 
         await interaction.followup.send(
             f"Let's get building! Retype this: `{fake_string}`", ephemeral=False
@@ -420,7 +413,7 @@ class Economy(commands.Cog, name="economy"):
             return
 
         if msg.content != original_string:
-            await msg.reply(f"Your build sucks. You did not earn anything.")
+            await msg.reply("Your build sucks. You did not earn anything.")
 
             return
 
@@ -435,10 +428,9 @@ class Economy(commands.Cog, name="economy"):
 
             if rarity is not None:
                 items_in_rarity = RARITIES[rarity]
-                try:
+
+                if len(items_in_rarity) > 0:
                     add_item = random.choice(items_in_rarity)
-                except:
-                    pass
 
             if add_item:
                 await msg.reply(
@@ -1022,8 +1014,7 @@ class Economy(commands.Cog, name="economy"):
 
         await self.bot.db.economy.update_one(
             {"discord_id": interaction.user.id},
-            {"$inc": {
-                f'inventory.{listing_data["item"]}': listing_data["stock"]}},
+            {"$inc": {f'inventory.{listing_data["item"]}': listing_data["stock"]}},
         )
 
         await interaction.response.send_message(

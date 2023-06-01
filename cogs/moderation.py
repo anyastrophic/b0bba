@@ -1,12 +1,9 @@
+"""The moderation module of B0BBA"""
+
 import asyncio
-import discord
-
-from discord import app_commands
-from discord.ext import commands
-
-from modules.enums import Enum
-
 from datetime import timedelta
+
+from discord.ext import commands
 
 reaction_cache = {}
 
@@ -19,6 +16,12 @@ class Moderation(commands.Cog, name="moderation"):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
+        """The function that gets called when a user reacts to a message
+
+        Args:
+            reaction (_type_): The reaction
+            user (discord.User): The user
+        """
         if not user in reaction_cache:
             reaction_cache[user] = 0
 
@@ -39,4 +42,9 @@ class Moderation(commands.Cog, name="moderation"):
 
 
 async def setup(bot):
+    """The setup function for the moderation module
+
+    Args:
+        bot (discord.Bot): The bot object
+    """
     await bot.add_cog(Moderation(bot))

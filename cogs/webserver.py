@@ -1,21 +1,21 @@
+"""The webserver module of B0BBA"""
+
 import secrets
 import asyncio
-import json
 import os
+
+import json
 import discord
-import random
 import git
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse
 
-from pydantic import BaseModel
+from pydantic import BaseModel # pylint: disable=no-name-in-module
 
 from discord.ext import commands
 
 from modules.database_utils import Registration
-
-chunk = None
 
 request_queue = {}
 
@@ -23,40 +23,39 @@ app = FastAPI()
 
 API_KEY = os.environ.get("B0BBA_API_KEY")
 
-bot = None
+BOT = None
 
+class Server(BaseModel):
+    """Server data sent from ROBLOX"""
+    age: float | int | None
+    players: dict | list
+    fps: float | int | None
+
+class VerificationRequest(BaseModel):
+    """Verification request sent from ROBLOX"""
+    roblox_id: str
+    discord_id: str
 
 class Webserver(commands.Cog, name="webserver"):
+    """The class containing the webserver functions"""
+
     def __init__(self, _bot):
-        global bot
+        global BOT # pylint: disable=global-statement
 
         self.bot = _bot
 
-        bot = _bot
+        BOT = _bot
 
+async def create_request(_type: str, job_id: str = "global"):
+    """Creates request
 
-async def start_stream():
-    global _chunk
+    Args:
+        t (str): The request type
+        job_id (str, optional): The job id. Defaults to "global".
 
-    dir = os.listdir(r"\\KEENETIC\Seagate Basic\Stuff\Music\\")
-    while True:
-        random.shuffle(dir)
-
-        for file in dir:
-            if file.endswith(".mp3"):
-                with open(rf"\\KEENETIC\Seagate Basic\Stuff\Music\{file}", "rb") as f:
-                    for chunk in iter(lambda: f.read(3056), b""):
-                        await current_chunk.set_value(chunk)
-
-                        await asyncio.sleep(0.13)
-
-
-@app.on_event("startup")
-async def startup_event():
-    asyncio.Task(start_stream())
-
-
-async def create_request(t: str, job_id: str = "global"):
+    Returns:
+        JSONResponse: The response
+    """
     request_id = secrets.token_hex(16)
 
     def callback(response: dict):
@@ -64,13 +63,13 @@ async def create_request(t: str, job_id: str = "global"):
 
     request_queue[request_id] = {"callback": callback, "response": None}
 
-    await bot.roblox_universe.publish_message(
+    await BOT.roblox_universe.publish_message(
         "global",
         json.dumps(
             {
                 "request_id": request_id,
                 "job_id": job_id,
-                "type": t,
+                "type": _type,
             }
         ),
     )
@@ -79,7 +78,7 @@ async def create_request(t: str, job_id: str = "global"):
         timeout = 10
 
         while True:
-            if request_queue[request_id]["response"] != None:
+            if request_queue[request_id]["response"] is not None:
                 return request_queue[request_id]["response"]
 
             await asyncio.sleep(0.1)
@@ -89,98 +88,61 @@ async def create_request(t: str, job_id: str = "global"):
 
     return await wait_for_response()
 
-
-class Server(BaseModel):
-    age: float | int | None
-    players: dict | list
-    fps: float | int | None
-
-
-class Subscription:
-    def __init__(self, callback) -> None:
-        self.callback = callback
-
-    async def call(self):
-        await self.callback()
-
-
-class Watcher:
-    def __init__(self) -> None:
-        self.subscriptions = []
-        self.value = 0
-
-    async def subscribe(self, callback):
-        self.subscriptions.append(Subscription(callback))
-
-    async def set_value(self, value):
-        self.value = value
-
-        for subscription in self.subscriptions:
-            await subscription.call()
-
-    def get_value(self):
-        return self.value
-
-
-current_chunk = Watcher()
-
-stream_started = False
-
-
-@app.get("/stream")
-async def stream_endpoint():
-    async def stream():
-        old_chunk = 0
-
-        while True:
-            await asyncio.sleep(0.0)
-
-            if old_chunk != current_chunk.get_value():
-                old_chunk = current_chunk.get_value()
-
-                yield old_chunk
-
-    return StreamingResponse(
-        stream(),
-        media_type="audio/mp3",
-        headers={
-            "Content-Disposition": 'inline; filename="Anya\'s Improvised Radio"'},
-    )
-
-
 @app.get("/servers/{job_id}")
 async def get_server_info(job_id: str):
+    """Gets info about a UB server
+
+    Args:
+        job_id (str): The job id
+
+    Returns:
+        JSONResponse: The response
+    """
     return await create_request("get_server_info", job_id=job_id)
 
 
 @app.post("/respond/{request_id}")
 async def respond(request_id: str, server_data: Server):
+    """Function that gets called when ROBLOX responds to a request created by B0BBA
+
+    Args:
+        request_id (str): The request id
+        server_data (Server): The server's data
+    """
     request_queue[request_id]["callback"](server_data.__dict__)
 
 
 @app.get("/")
-async def read_root(request: Request):
+async def read_root():
+    """Function that gets called when user visits the root of the API
+
+    Returns:
+        int: always returns 200
+    """
     return 200
-    return await stream_endpoint(request)
 
 @app.post(f"/{API_KEY}")
 async def github_webhook():
-    g = git.cmd.Git(".")
-    g.pull()
+    """Github webhook endpoint, currently used to restart the bot on Push"""
+    _git = git.cmd.Git(".")
+    _git.pull()
 
     os.startfile("main.py")
 
     pid = os.getpid()
     os.system(f"taskkill /F /PID {pid}")
 
-
-class VerificationRequest(BaseModel):
-    roblox_id: str
-    discord_id: str
-
-
 @app.post("/verify")
 async def verify_endpoint(request: Request, verification_request: VerificationRequest):
+    """Verifies user specified in the verification request
+
+    Args:
+        request (Request): The request
+        verification_request (VerificationRequest): The verification request
+
+    Returns:
+        JSONResponse: The response
+    """
     headers = request.headers
 
     roblox_id = int(verification_request.roblox_id)
@@ -197,8 +159,8 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     await Registration(discord_id, roblox_id).links()
 
-    member: discord.Member = bot.ub_guild.get_member(discord_id)
-    role: discord.Role = bot.ub_guild.get_role(406997457709432862)
+    member: discord.Member = BOT.ub_guild.get_member(discord_id)
+    role: discord.Role = BOT.ub_guild.get_role(406997457709432862)
 
     if not role in member.roles:
         await member.add_roles(role)
@@ -207,4 +169,9 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
 
 async def setup(bot):
+    """The setup function for the webserver module
+
+    Args:
+        bot (discord.Bot): The bot object
+    """
     await bot.add_cog(Webserver(bot))

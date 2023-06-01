@@ -19,8 +19,7 @@ class Owner(commands.Cog, name="owner"):
     def __init__(self, bot):
         self.bot = bot
 
-    owner_commands = app_commands.Group(
-        name="owner", description="Owner commands")
+    owner_commands = app_commands.Group(name="owner", description="Owner commands")
 
     @owner_commands.command()
     async def role(

@@ -1,13 +1,14 @@
+"""The fun module of B0BBA"""
+
 import time
 import asyncio
-import discord
-import aiodocker
-
 import random
 
-from discord import app_commands
+import discord
 
+from discord import app_commands
 from discord.ext import commands
+
 from games.hangman.game import HangmanGame
 from games.unscramble.game import UnscrambleGame
 from games.wordle.game import WordleGame
@@ -15,7 +16,7 @@ from games.wordle.game import WordleGame
 from modules.loggers import Logger
 
 words = []
-with open(f"./games/words.txt", "r") as f:
+with open("./games/words.txt", "r", encoding="utf-8") as f:
     words = f.read().splitlines()
 
     f.close()
@@ -24,6 +25,8 @@ user_games = {}
 
 
 class Fun(commands.Cog, name="fun"):
+    """The class containing the fun-ctions haha get it"""
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -65,14 +68,14 @@ class Fun(commands.Cog, name="fun"):
                     await interaction.followup.send(await game.get_output("mid-game"))
                     try:
                         await game_loop()
-                    except:
+                    except Exception:
                         return
                 case _:
                     await interaction.followup.send(await game.get_output(guess_result))
 
         try:
             await game_loop()
-        except:
+        except Exception:
             return
 
         if interaction.user.id in user_games:
@@ -88,6 +91,7 @@ class Fun(commands.Cog, name="fun"):
         await asyncio.sleep(0.1)
         if interaction.user.id in user_games:
             user_games.pop(interaction.user.id)
+
         await interaction.response.send_message(
             "If there was a running game, it was canceled."
         )
@@ -192,8 +196,7 @@ class Fun(commands.Cog, name="fun"):
             wait=True,  # apparently this is needed for it to return a WebhookMessage
         )
 
-        Logger.Fun.Impersonate.UserImpersonated(
-            interaction.user, member, message)
+        Logger.Fun.Impersonate.UserImpersonated(interaction.user, member, message)
 
         await webhook.delete()
 

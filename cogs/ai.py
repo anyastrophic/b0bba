@@ -1,24 +1,19 @@
-import discord
+"""The AI module of B0BBA"""
+
 import secrets
 import os
 
-from discord import app_commands
+import discord
 
+from discord import app_commands
 from discord.ext import commands
+
 from async_openai import OpenAI
 from modules.enums import Enum
-
 from modules.gpt_data import prompts as FED_DATA
 
 FREE_MODELS = ["gpt-3.5-turbo"]
 BLACKLISTED_WORDS = ["https://", "http://"]
-
-chats = {}
-
-
-def get_user_chats(id):
-    return chats.get(id, [])
-
 
 class AI(commands.Cog, name="ai"):
     """AI features of B0BBA"""
@@ -27,7 +22,7 @@ class AI(commands.Cog, name="ai"):
         self.bot = bot
 
     async def multitoken_gpt(
-        self, interaction, prompt, unhinged: bool = False, idx: int = 0
+        self, interaction, prompt, idx: int = 0
     ):
         tokens = os.environ.get("OPENAI_KEYS", "").split(",")
 
@@ -53,7 +48,6 @@ class AI(commands.Cog, name="ai"):
             )
 
         except Exception:
-            print(Exception.__traceback__)
             if idx < len(tokens) - 1:
                 await self.multitoken_gpt(
                     interaction=interaction, prompt=prompt, idx=idx + 1
@@ -99,4 +93,9 @@ class AI(commands.Cog, name="ai"):
 
 
 async def setup(bot):
+    """The setup function for the AI module
+
+    Args:
+        bot (discord.Bot): The bot object
+    """
     await bot.add_cog(AI(bot))

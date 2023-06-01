@@ -16,9 +16,10 @@ class GDPR(commands.Cog, name="GDPR"):
     async def delete_data(self, interaction: discord.Interaction):
         """deletes all of your data from the B0BBA bot"""
 
-        def check(m):
+        def check(msg):
             return (
-                m.author.id == interaction.user.id and m.channel == interaction.channel
+                msg.author.id == interaction.user.id
+                and msg.channel == interaction.channel
             )
 
         await interaction.response.send_message(

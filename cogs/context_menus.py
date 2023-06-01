@@ -1,18 +1,27 @@
-import discord
+"""Context menus for the B0BBA bot"""
+
 import time
 
 from datetime import datetime
+
+import discord
+from discord.ext import commands
+from discord import app_commands
 
 from modules.database_utils import Registration
 from modules.roblox_utils import User
 from modules.enums import Enum
 
-from discord.ext import commands
-from discord import app_commands
-
 
 class ContextMenus(commands.Cog):
+    """The class containing the context menu functions"""
+
     def __init__(self, bot: commands.Bot) -> None:
+        """Constructor function for the ContextMenus class
+
+        Args:
+            bot (commands.Bot): The bot
+        """
         self.bot = bot
 
         whois_ctx_menu = self.whois_context_menu
@@ -27,7 +36,12 @@ class ContextMenus(commands.Cog):
     async def whois_context_menu(
         self, interaction: discord.Interaction, user: discord.User
     ) -> None:
-        """query bot's data about a DISCORD user"""
+        """Context menu for the whois command
+
+        Args:
+            interaction (discord.Interaction): The interaction object
+            user (discord.User): The user object
+        """
 
         user_id = user.id
 
@@ -55,4 +69,9 @@ class ContextMenus(commands.Cog):
 
 
 async def setup(bot):
+    """The setup function for the context menus module
+
+    Args:
+        bot (discord.Bot): The bot object
+    """
     await bot.add_cog(ContextMenus(bot))
