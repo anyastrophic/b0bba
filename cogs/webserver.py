@@ -169,6 +169,7 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
     await Registration(discord_id, roblox_id).links()
 
     member: discord.Member = BOT.ub_guild.get_member(discord_id)
+    print(BOT, member)
     role: discord.Role = BOT.ub_guild.get_role(406997457709432862)
 
     if role not in member.roles:
