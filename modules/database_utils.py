@@ -11,7 +11,6 @@ import discord
 import roblox.users
 
 client = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")
-client = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")
 client.get_io_loop = asyncio.get_running_loop
 db = client["b0bba"]
 
