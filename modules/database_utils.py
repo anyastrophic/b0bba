@@ -11,6 +11,7 @@ import discord
 import roblox.users
 
 client = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")
+client = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")
 client.get_io_loop = asyncio.get_running_loop
 db = client["b0bba"]
 
@@ -57,9 +58,12 @@ class Registration:
 
         return await self.economy()
 
-    async def blacklist(
-        self, reason: str = "Data deletion"
-    ) -> None:  # register user in blacklist collection (lol)
+    async def blacklist(self, reason: str = "Data deletion") -> None:
+        """Blacklist user
+
+        Args:
+            reason (str, optional): Reason for lbacklisting. Defaults to "Data deletion".
+        """
         if await self.check_registration("blacklist"):
             return
 
@@ -68,6 +72,7 @@ class Registration:
         )
 
     async def links(self):
+        """Verify user"""
         assert self.roblox_id, "No Roblox ID specified"
 
         if await db["links"].find_one({"discord_id": self.discord_id}) or await db[
@@ -80,6 +85,7 @@ class Registration:
         )
 
     async def admins(self):
+        """Register user as an admin"""
         if await db["admins"].find_one({"discord_id": self.discord_id}):
             return
 
@@ -93,6 +99,16 @@ class Registration:
         )
 
     async def economy_marketplace(self, item: str, stock: int, price_per_item: int):
+        """Register a listing on the marketplace
+
+        Args:
+            item (str): The item
+            stock (int): The amount of items this listing will sell in total
+            price_per_item (int): The price of this item per 1
+
+        Returns:
+            str: The listing id
+        """
         if await db["economy_marketplace"].find_one({"discord_id": self.discord_id}):
             return
 
@@ -120,6 +136,15 @@ class Registration:
         report_creator: discord.User,
         reported_user: roblox.users.User,
     ):
+        """Register a closed report
+
+        Args:
+            report_id (int): The channel id for the report
+            report_description (str): The content of the post's starter message
+            closed_by (discord.User): The admin that closed the report
+            report_creator (discord.User): The user that opened the report
+            reported_user (roblox.users.User): The user that was reported
+        """
         if await db["reports"].find_one({"report_id": report_id}):
             return
 
@@ -131,8 +156,7 @@ class Registration:
                     "created_at": time.time(),  # unix timestamp
                     "closed_by": {
                         "discord_id": closed_by.id,  # snowflake id
-                        # username, such as anyastrophic#2775 or @anyastrophic
-                        "discord_username": f"{closed_by.name}#{closed_by.discriminator}",
+                        "discord_username": f"{closed_by.name}#{closed_by.discriminator}",  # username, such as anyastrophic#2775 or @anyastrophic
                     },
                 },
                 "report_creator": {
@@ -148,13 +172,26 @@ class Registration:
 
 
 async def check_link(discord_id: int):
+    """Checks if the user has verified their account
+
+    Args:
+        discord_id (int): The user's discord id
+
+    Returns:
+        _type_: Returns find result or None if not found
+    """
     return await db["links"].find_one({"discord_id": discord_id})
 
 
 async def delete_data(
     discord_id: int,
-):  # data deletion, called when a user requests data deletion, to comply with GDPR
-    collections = [name for name in await db.list_collection_names()]
+):
+    """Deletes user data
+
+    Args:
+        discord_id (int): The user's discord id
+    """
+    collections = await db.list_collection_names()
 
     for collection in collections:
         if collection == "admins":
@@ -166,6 +203,14 @@ async def delete_data(
 
 
 async def get_marketplace_listings(discord_id: int = None):
+    """Gets listings created by the specified user
+
+    Args:
+        discord_id (int, optional): The user's discord id. Defaults to None.
+
+    Returns:
+        list: A list of listings
+    """
     economy_marketplace = db.economy_marketplace
 
     listings = []
