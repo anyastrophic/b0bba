@@ -168,10 +168,11 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     await Registration(discord_id, roblox_id).links()
 
+    _ = (
+        BOT.ub_guild.members
+    )  # this is just to cache everyone, so the below doesn't return an error
+
     member: discord.Member = BOT.ub_guild.get_member(discord_id)
-    for member in BOT.ub_guild.members:
-        if member.id == 405821998221230080:
-            print(member)
     role: discord.Role = BOT.ub_guild.get_role(406997457709432862)
 
     if role not in member.roles:
