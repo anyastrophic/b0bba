@@ -59,7 +59,8 @@ class AI(commands.Cog, name="ai"):
             await interaction.followup.send("https://http.cat/429")
 
             logging.getLogger("b0bba.ai.gpt").error(
-                f"Error occured while trying to get a prompt! Traceback: {Exception.__traceback__}"
+                "Error occured while trying to get a prompt! Traceback: %s",
+                Exception.__traceback__,
             )
 
     @app_commands.command()
