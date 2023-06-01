@@ -29,8 +29,6 @@ class AI(commands.Cog, name="ai"):
 
         tokens = os.environ.get("OPENAI_KEYS", "").split(",")
 
-        print(tokens)
-
         messages = FED_DATA
         messages = messages + [
             {
