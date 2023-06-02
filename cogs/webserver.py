@@ -154,7 +154,7 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
     """
     headers = request.headers
 
-    print(discord_id, roblox_id)
+    print(verification_request.discord_id, verification_request.roblox_id)
 
     roblox_id = int(verification_request.roblox_id)
     discord_id = int(verification_request.discord_id)
