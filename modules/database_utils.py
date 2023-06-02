@@ -23,7 +23,7 @@ class Registration:
     async def check_registration(
         self, collection: str, search_by: str = "discord_id"
     ) -> bool:
-        return await db[collection].find_one({"discord_id": self.discord_id})
+        return await db[collection].find_one({search_by: self.discord_id})
 
     async def economy(self) -> None:
         registration = await self.check_registration("economy")
