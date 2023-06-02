@@ -154,8 +154,6 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
     """
     headers = request.headers
 
-    print(verification_request.discord_id, verification_request.roblox_id)
-
     roblox_id = int(verification_request.roblox_id)
     discord_id = int(verification_request.discord_id)
     api_key = headers.get("api-key")
@@ -167,8 +165,6 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     if api_key != API_KEY:
         return JSONResponse(content={"message": "Invalid API key"}, status_code=401)
-
-    print(discord_id, roblox_id)
 
     await Registration(discord_id, roblox_id).links()
 
