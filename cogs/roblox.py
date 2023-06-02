@@ -97,7 +97,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         if await Registration(interaction.user.id).check_registration(
             "links"
-        ) or await Registration(user.id).check_registration("links"):
+        ) or await Registration(user.id).check_registration("links", "roblox_id"):
             await interaction.response.send_message("Your account is already verified!")
             return
 

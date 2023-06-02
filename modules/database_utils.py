@@ -20,7 +20,9 @@ class Registration:
         self.discord_id = discord_id
         self.roblox_id = roblox_id
 
-    async def check_registration(self, collection: str) -> bool:
+    async def check_registration(
+        self, collection: str, search_by: str = "discord_id"
+    ) -> bool:
         return await db[collection].find_one({"discord_id": self.discord_id})
 
     async def economy(self) -> None:
