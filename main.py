@@ -24,6 +24,7 @@ from modules.loggers import (
 )
 
 from modules.database_utils import Registration
+from modules.get_setup import get_setup
 
 import warnings
 
@@ -51,6 +52,8 @@ class Bot(discord.ext.commands.Bot):
         ROBLOX_CLIENT = roblox.Client(
             os.environ.get("ROBLOX_COOKIE"), os.environ.get("ROBLOX_API_KEY")
         )
+
+        bot.SETUP = get_setup()
 
         bot.ROBLOX_CLIENT = ROBLOX_CLIENT
         bot.roblox_client = ROBLOX_CLIENT
@@ -141,8 +144,7 @@ if __name__ == "__main__":
     streamHandler = logging.StreamHandler()
     streamHandler.setFormatter(_ColourFormatter())
 
-    webhookHandler = DiscordWebhookHandler(
-        os.environ.get("B0BBA_LOGGING_WEBHOOK"))
+    webhookHandler = DiscordWebhookHandler(os.environ.get("B0BBA_LOGGING_WEBHOOK"))
     webhookHandler.setFormatter(_DiscordColorFormatter())
 
     logging.getLogger().addHandler(streamHandler)
