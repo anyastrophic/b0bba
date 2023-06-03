@@ -49,7 +49,7 @@ async def error_handler(bot, interaction: discord.Interaction, error):
         description = timestring[: len(timestring) - 2]
 
     if isinstance(error, app_commands.CheckFailure):
-        document = await bot.DB["blacklist"].find_one(
+        document = await bot.db["blacklist"].find_one(
             {"discord_id": interaction.user.id}
         )
 
