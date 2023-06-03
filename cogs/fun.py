@@ -272,7 +272,7 @@ class Fun(commands.Cog, name="fun"):
 
         await interaction.user.avatar.save(image_path)
 
-        img = Image.open(image_path).convert("RGB").resize((128, 128))
+        img = Image.open(image_path).convert("RGB").resize((265, 265))
         img = await self.add_pfp_border(
             img, Image.open(f"./files/{border_image_name}"), border_size
         )
