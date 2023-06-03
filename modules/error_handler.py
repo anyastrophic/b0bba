@@ -63,7 +63,7 @@ async def error_handler(bot, interaction: discord.Interaction, error):
             return
 
     embed = discord.Embed(
-        title="Error", description=description, color=Enum.Embeds.Colors.Error
+        title="Exception", description=description, color=Enum.Embeds.Colors.Exception
     )
     await interaction.response.send_message(embed=embed, ephemeral=ephemeral)
 
@@ -109,6 +109,6 @@ async def legacy_error_handler(bot, ctx, error):
         description = timestring[: len(timestring) - 2]
 
     embed = discord.Embed(
-        title="Error", description=description, color=Enum.Embeds.Colors.Error
+        title="Exception", description=description, color=Enum.Embeds.Colors.Exception
     )
     await ctx.send(embed=embed)
