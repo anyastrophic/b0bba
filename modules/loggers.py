@@ -1,3 +1,5 @@
+# pylint:disable-all
+
 import logging
 import discord
 import threading
@@ -88,14 +90,12 @@ class DiscordWebhookHandler(logging.StreamHandler):
 
     def _send_webhook(self, message: str):
         requests.post(
-            url=self.webhook_url, json={
-                "content": message, "username": "B0BBA logging"}
+            url=self.webhook_url, json={"content": message, "username": "B0BBA logging"}
         )
 
     def emit(self, record):
         try:
-            t = threading.Thread(target=self._send_webhook,
-                                 args=[self.format(record)])
+            t = threading.Thread(target=self._send_webhook, args=[self.format(record)])
             t.start()
         except (KeyboardInterrupt, SystemExit):
             raise
@@ -169,7 +169,7 @@ class Logger:
                 )
 
         class GameBan:
-            logger = logging.getLogger("b0bba.robloxmod.globalmessage")
+            logger = logging.getLogger("b0bba.robloxmod.gamebans")
 
             @classmethod
             def Success(
@@ -224,3 +224,11 @@ class Logger:
                 self.logger.info(
                     f"{user} ({user.id}) impersonated {impersonated_user.name} ({impersonated_user.id}) (under disp. name: {impersonated_user.display_name}). Message content: {message.system_content}. Message link: {message.jump_url}"
                 )
+
+    class Time:
+        class Timezone:
+            logger = logging.getLogger("b0bba.time.timezone")
+
+            @classmethod
+            def UserSetTimezone(self, user: discord.User, timezone: str):
+                self.logger.info(f"{user} ({user.id}) set their timezone to {timezone}")

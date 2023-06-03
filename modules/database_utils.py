@@ -25,6 +25,13 @@ class Registration:
     ) -> bool:
         return await db[collection].find_one({search_by: self.discord_id})
 
+    async def time(self) -> None:
+        """Register user in time collection"""
+        if await self.check_registration("time"):
+            return
+
+        await db["time"].insert_one({"discord_id": self.discord_id})
+
     async def economy(self) -> None:
         registration = await self.check_registration("economy")
         if registration:

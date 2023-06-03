@@ -8,6 +8,10 @@ import os
 import threading
 
 from modules.enums import Enum
+from modules.database_utils import Registration
+from modules.requests import Request
+from modules.exceptions import HttpException
+from modules.loggers import Logger
 
 from discord.ext import commands, tasks
 
@@ -184,6 +188,88 @@ class Utility(commands.Cog, name="util"):
                 command, self.bot.cogs, self.bot.tree
             )
         )
+
+    time_commands = app_commands.Group(
+        name="time", description="Commands for time stuff"
+    )
+
+    @time_commands.command()
+    async def get_user_time(self, interaction: discord.Interaction, user: discord.User):
+        """Get the local time of the user specified"""
+        user_data = await Registration(user.id).check_registration("time")
+
+        if not user_data or not user_data.get("timezone"):
+            embed = discord.Embed(
+                title="Error",
+                description="This user hasn't added their timezone to the bot! ( `/time set_timezone` )",
+                colour=Enum.Embeds.Colors.Error,
+            )
+
+            await interaction.response.send_message(embed=embed)
+            return
+
+        user_timezone = user_data.get("timezone")
+        try:
+            time_data = await Request().get(
+                f"https://timeapi.io/api/Time/current/zone?timeZone={user_timezone}"
+            )
+        except HttpException:
+            await interaction.response.send_message(
+                "Something went wrong while trying to get data from the time API"
+            )
+
+        embed = discord.Embed(
+            title=time_data["time"],
+            colour=Enum.Embeds.Colors.Info,
+        )
+        embed.add_field(
+            name="Date", value=f"`{time_data['date']}, {time_data['dayOfWeek']}`"
+        )
+        embed.add_field(name="Timezone", value=f"`{time_data['timeZone']}`")
+        embed.set_author(
+            name=f"{user.display_name}'s time", icon_url=user.display_avatar
+        )
+
+        await interaction.response.send_message(embed=embed)
+
+    @time_commands.command()
+    async def set_timezone(self, interaction: discord.Interaction, timezone: str):
+        """Set your timezone"""
+        try:
+            await Request().get(
+                f"https://timeapi.io/api/Time/current/zone?timeZone={timezone}"
+            )
+        except HttpException as exc:
+            if exc.status == 400:
+                embed = discord.Embed(
+                    title="Error",
+                    description="This timezone doesn't exist! Here's a list with existing timezones: <https://timeapi.io/api/TimeZone/AvailableTimeZones>\n*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
+                    colour=Enum.Embeds.Colors.Error,
+                )
+                await interaction.response.send_message(embed=embed)
+                return
+
+            await interaction.response.send_message(
+                "Something went wrong while trying to get data from the time API"
+            )
+
+            return
+
+        await Registration(interaction.user.id).time()
+
+        await self.bot.db.time.update_one(
+            {"discord_id": interaction.user.id}, {"$set": {"timezone": timezone}}
+        )
+
+        embed = discord.Embed(
+            title="OK",
+            description=f"Your timezone was set to {timezone}",
+            colour=Enum.Embeds.Colors.Success,
+        )
+
+        await interaction.response.send_message(embed=embed)
+
+        Logger.Time.Timezone.UserSetTimezone(interaction.user, timezone)
 
     # @app_commands.command()
     # async def to_ub_markdown(self, interaction: discord.Interaction):
