@@ -1,10 +1,13 @@
 """The fun module of B0BBA"""
 
+import aiofiles
 import time
 import asyncio
 import random
-
 import discord
+import os
+
+from typing import List
 
 from discord import app_commands
 from discord.ext import commands
@@ -14,6 +17,9 @@ from games.unscramble.game import UnscrambleGame
 from games.wordle.game import WordleGame
 
 from modules.loggers import Logger
+
+from PIL import Image, ImageDraw
+from io import BytesIO
 
 words = []
 with open("./games/words.txt", "r", encoding="utf-8") as f:
@@ -201,6 +207,111 @@ class Fun(commands.Cog, name="fun"):
         await webhook.delete()
 
         await interaction.response.send_message("Done!", ephemeral=True)
+
+    async def save_image(self, path: str, image: memoryview) -> None:
+        """Asynchronously save an image
+
+        Args:
+            path (str): The path to the image
+            image (memoryview): The image
+        """
+        async with aiofiles.open(path, "wb") as file:
+            await file.write(image)
+
+    async def circle_overlay(self, image, overlay_image, mask=None, size: int = 0):
+        old_size = image.size
+        new_size = (265 + size, 265 + size)
+        overlay_image = overlay_image.resize(new_size)
+        new_im = overlay_image
+        box = tuple((n - o) // 2 for n, o in zip(new_size, old_size))
+        new_im.paste(image, box, mask=mask)
+
+        return new_im
+
+    async def add_pfp_border(
+        self,
+        pfp,
+        border,
+        size,
+    ):
+        """Add an image border around another image
+
+        Args:
+            pfp (Image): The first image (pfp)
+            border (Image): The border
+            size (int): The size to add
+
+        Returns:
+            Image: The result image
+        """
+        width, height = pfp.size
+        length = (width - height) // 2
+        img_cropped = pfp.crop((length, 0, length + height, height))
+        mask = Image.new("L", img_cropped.size)
+        mask_draw = ImageDraw.Draw(mask)
+        width, height = img_cropped.size
+        mask_draw.ellipse((0, 0, width, height), fill=255)
+        img_cropped.putalpha(mask)
+
+        overlayed_image = await self.circle_overlay(
+            img_cropped, border.convert("RGB"), mask=mask, size=size
+        )
+
+        return overlayed_image
+
+    async def pfp_command(self, interaction, border_size, border_image_name: str):
+        """Adds a transgender border to your profile picture"""
+        if border_size > 500:
+            await interaction.response.send_message(
+                "That border size is a little too much!"
+            )
+            return
+
+        filename = interaction.user.id
+        image_path = f"./temp/{filename}.png"
+
+        await interaction.user.avatar.save(image_path)
+
+        img = Image.open(image_path).convert("RGB")
+        img = await self.add_pfp_border(
+            img, Image.open(f"./files/{border_image_name}"), border_size
+        )
+
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+
+        await self.save_image(  # pylint: disable=too-many-function-args
+            image_path,  # pylint: disable=too-many-function-args
+            buffer.getbuffer(),  # pylint: disable=too-many-function-args
+        )  # pylint: disable=too-many-function-args
+
+        await interaction.response.send_message(file=discord.File(image_path))
+
+    pfp_commands = app_commands.Group(name="pfp", description="PFP border commands")
+
+    flag_list = os.listdir("./files")
+
+    @pfp_commands.command()
+    @app_commands.checks.cooldown(1, 10)
+    async def pride(
+        self, interaction: discord.Interaction, flag: str, border_size: int = 20
+    ):
+        """Adds a pride flag border of your choice to your profile picture"""
+        if flag not in self.flag_list:
+            await interaction.response.send_message("This flag doesn't exist!")
+            return
+
+        await self.pfp_command(interaction, border_size, flag)
+
+    @pride.autocomplete("flag")
+    async def _flag_autocomplete(
+        self, _: discord.Interaction, current: str
+    ) -> List[app_commands.Choice[str]]:
+        return [
+            app_commands.Choice(name=item[:-4].capitalize(), value=item)
+            for item in self.flag_list
+            if current.lower() in item.lower()
+        ]
 
 
 async def setup(bot):

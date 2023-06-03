@@ -19,12 +19,6 @@ from modules.loggers import Logger
 openai.api_key = "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"
 openai.organization = "org-RgAxsUuotwCUDQdjpNfSOvCE"
 
-linking_words = []
-with open("./files/verify-words.txt", "r", encoding="utf-8") as f:
-    linking_words = f.read().splitlines()
-
-    f.close()
-
 
 class Roblox(commands.Cog, name="roblox"):
     def __init__(self, bot):
