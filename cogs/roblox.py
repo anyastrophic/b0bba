@@ -110,28 +110,20 @@ class Roblox(commands.Cog, name="roblox"):
             )
             return
 
-        verification_code = secrets.token_urlsafe(2)
         verification_store = await self.verification_universe.get_standard_datastore(
             "Verification"
         )
 
         try:
             await verification_store.get_entry(user.id)
-
-            await interaction.response.send_message(
-                "This ROBLOX account already has a pending verification request!"
-            )
-            return
         except roblox.NotFound:
-            pass
-
-        await verification_store.set_entry(
-            user.id,
-            {
-                "discord_id": str(interaction.user.id),
-                "verification_code": verification_code,
-            },
-        )
+            await verification_store.set_entry(
+                user.id,
+                {
+                    "discord_id": str(interaction.user.id),
+                    "discord_username": f"{interaction.user.name}#{interaction.user.discriminator}",
+                },
+            )
 
         if not isinstance(interaction.channel, discord.channel.DMChannel):
             await interaction.response.send_message(
@@ -139,10 +131,10 @@ class Roblox(commands.Cog, name="roblox"):
             )
 
         await interaction.user.send(
-            f"""
+            """
             # B0BBA Verification
 
-            ### To verify your account, please join the game below and enter the following code: `{verification_code}`
+            ### To verify your account, please join the game below and press `Confirm`
 
 <https://www.roblox.com/games/7646362415>
         """
