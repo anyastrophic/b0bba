@@ -27,10 +27,6 @@ import modules.requests
 from modules.database_utils import Registration
 from modules.get_setup import get_setup
 
-import warnings
-
-warnings.filterwarnings("ignore")  # fuck you, audio_metadata
-
 UB_GUILD = discord.Object(id=406995309000916993)
 
 
@@ -90,34 +86,40 @@ bot.tree.interaction_check = _check
 
 @bot.event
 async def on_application_command_error(ctx, error):
+    """App command error handler
+
+    Args:
+        ctx (discord.Interaction): The interaction
+        error (_type_): The error
+    """
     await error_handler(bot, ctx, error)
 
 
 @bot.event
 async def on_command_error(ctx, error):
+    """Legacy command error handler
+
+    Args:
+        ctx (discord.Context): The context
+        error (_type_): The error
+    """
     await legacy_error_handler(bot, ctx, error)
-
-
-first_load = True
 
 
 @bot.event
 async def on_ready():
-    global first_load
-
     db_name = "b0bba" if os.environ.get("B0BBA_VERSION") == "test" else "b0bba"
     bot.db = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")[
         db_name
     ]
     bot._registration = Registration
 
-    if first_load == True:
-        from cogs.webserver import app
+    from cogs.webserver import app
 
-        config = Config(app=app, host="0.0.0.0", port=80)
-        server = Server(config)
+    config = Config(app=app, host="0.0.0.0", port=80)
+    server = Server(config)
 
-        bot.loop.create_task(server.serve())
+    bot.loop.create_task(server.serve())
 
     UB_GUILD = bot.get_guild(406995309000916993)
 

@@ -56,9 +56,9 @@ class Utility(commands.Cog, name="util"):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id == 483011136006914078:
-            POOKIE = discord.File("POOKIE.mp4", filename="POOKIE.mp3")
+            pookie = discord.File("POOKIE.mp4", filename="POOKIE.mp3")
             if random.randint(1, 50) == 50:
-                await message.reply(file=POOKIE)
+                await message.reply(file=pookie)
 
         if (
             message.channel.id == 1054082338268647565

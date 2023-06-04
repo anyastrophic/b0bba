@@ -1,12 +1,12 @@
 """The roblox module of B0BBA"""
 
-import openai
+import os
 import time as _time
+
+import openai
 import discord
 import openpyxl
-import secrets
 import roblox
-import os
 
 from discord.ext import commands
 from discord import app_commands
@@ -22,16 +22,20 @@ openai.organization = "org-RgAxsUuotwCUDQdjpNfSOvCE"
 
 class Roblox(commands.Cog, name="roblox"):
     def __init__(self, bot):
+        """Roblox cog containing roblox-related commands
+
+        Args:
+            bot (discord.Bot): The bot
+        """
+        self.universe = bot.ROBLOX_UNIVERSE
+        self.group = bot.ROBLOX_GROUP
+        self.place = bot.ROBLOX_PLACE
+        self.roblox_client: roblox.Client = bot.ROBLOX_CLIENT
+
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.universe = self.bot.ROBLOX_UNIVERSE
-        self.group = self.bot.ROBLOX_GROUP
-        self.place = self.bot.ROBLOX_PLACE
-
-        self.roblox_client: roblox.Client = self.bot.ROBLOX_CLIENT
-
         self.verification_universe: roblox.BaseUniverse = (
             await self.bot.verification_roblox_client.get_universe(2970693715)
         )
@@ -287,7 +291,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         try:
             await interaction.channel.owner.send(embed=embed)
-        except Exception:
+        except discord.Forbidden:
             await interaction.channel.send(
                 f"<@{interaction.channel.owner_id}>, your DMs are closed, so I pinged you for your report!"
             )
@@ -414,7 +418,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         registration = await self.bot.db.admins.find_one({"discord_id": admin.id})
 
-        for reportid, reportdata in registration["reports_closed"].items():
+        for reportid, _ in registration["reports_closed"].items():
             registration["reports_closed"][reportid]["expired"] = True
 
         registration["payouts_received"][str(len(registration["payouts_received"]))] = {
@@ -426,8 +430,8 @@ class Roblox(commands.Cog, name="roblox"):
         csrf = await get_csrf()
         cookie = os.environ.get("ROBLOX_COOKIE")
 
-        assert csrf != None, "CSRF token is None"
-        assert cookie != None, "Cookie is None"
+        assert csrf is not None, "CSRF token is None"
+        assert cookie is not None, "Cookie is None"
 
         result = await Request().post(
             "https://groups.roblox.com/v1/groups/11205637/payouts",
@@ -544,9 +548,9 @@ class Roblox(commands.Cog, name="roblox"):
         admins = ""
 
         result = self.bot.db.admins.find({}, {})
-        list = await result.to_list(100)
+        _list = await result.to_list(100)
 
-        for document in list:
+        for document in _list:
             user = await self.bot.fetch_user(document["discord_id"])
             admins += f"Should you payout **{user}**: {document['payout']>0}\n"
 
