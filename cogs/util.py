@@ -194,8 +194,13 @@ class Utility(commands.Cog, name="util"):
     )
 
     @time_commands.command()
-    async def get_user_time(self, interaction: discord.Interaction, user: discord.User):
+    async def get_user_time(
+        self, interaction: discord.Interaction, user: discord.User = None
+    ):
         """Get the local time of the user specified"""
+        if not user:
+            user = interaction.user
+
         user_data = await Registration(user.id).check_registration("time")
 
         if not user_data or not user_data.get("timezone"):
@@ -214,7 +219,7 @@ class Utility(commands.Cog, name="util"):
                 "https://timeapi.io/api/Time/current/zone",
                 params={"timeZone": user_timezone},
             )
-        except ClientResponseError as exc:
+        except ClientResponseError:
             await interaction.response.send_message(
                 "Something went wrong while trying to get data from the time API"
             )
@@ -258,6 +263,14 @@ class Utility(commands.Cog, name="util"):
             return
 
         await Registration(interaction.user.id).time()
+
+        # improve UX by fixing the signs being replaced in the API
+        timezone_to_set = timezone
+
+        if "+" in timezone_to_set:
+            timezone_to_set = timezone_to_set.replace("+", "-")
+        elif "-" in timezone_to_set:
+            timezone_to_set = timezone_to_set.replace("-", "+")
 
         await self.bot.db.time.update_one(
             {"discord_id": interaction.user.id}, {"$set": {"timezone": timezone}}
