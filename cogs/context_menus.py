@@ -39,8 +39,8 @@ class ContextMenus(commands.Cog):
             callback=gettime_ctx_menu,
         )
 
-        self.bot.tree.add_command(self.whois_ctx_menu)
-        self.bot.tree.add_command(self.gettime_context_menu)
+        self.bot.tree.add_command(whois_ctx_menu)
+        self.bot.tree.add_command(gettime_ctx_menu)
 
     async def whois_context_menu(
         self, interaction: discord.Interaction, user: discord.User
