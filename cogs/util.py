@@ -214,6 +214,13 @@ class Utility(commands.Cog, name="util"):
             return
 
         user_timezone = user_data.get("timezone")
+        old_timezone = user_timezone
+        # improve UX by fixing the signs being replaced in the API
+        if "+" in user_timezone:
+            user_timezone = user_timezone.replace("+", "-")
+        elif "-" in user_timezone:
+            user_timezone = user_timezone.replace("-", "+")
+
         try:
             time_data = await self.bot.http_client.get(
                 "https://timeapi.io/api/Time/current/zone",
@@ -231,7 +238,7 @@ class Utility(commands.Cog, name="util"):
         embed.add_field(
             name="Date", value=f"`{time_data['date']}, {time_data['dayOfWeek']}`"
         )
-        embed.add_field(name="Timezone", value=f"`{time_data['timeZone']}`")
+        embed.add_field(name="Timezone", value=f"`{old_timezone}`")
         embed.set_author(
             name=f"{user.display_name}'s time", icon_url=user.display_avatar
         )
@@ -264,21 +271,13 @@ class Utility(commands.Cog, name="util"):
 
         await Registration(interaction.user.id).time()
 
-        # improve UX by fixing the signs being replaced in the API
-        timezone_to_set = timezone
-
-        if "+" in timezone_to_set:
-            timezone_to_set = timezone_to_set.replace("+", "-")
-        elif "-" in timezone_to_set:
-            timezone_to_set = timezone_to_set.replace("-", "+")
-
         await self.bot.db.time.update_one(
             {"discord_id": interaction.user.id}, {"$set": {"timezone": timezone}}
         )
 
         embed = discord.Embed(
             title="OK",
-            description=f"Your timezone was set to `{timezone}`",
+            description=f"Your timezone was set to `{timezone_to_set}`",
             colour=Enum.Embeds.Colors.Success,
         )
 
