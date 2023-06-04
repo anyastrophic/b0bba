@@ -25,10 +25,12 @@ from typing import List
 class Utility(commands.Cog, name="util"):
     def __init__(self, bot):
         self.bot = bot
-        self.roblox_client: roblox.Client = self.bot.ROBLOX_CLIENT
+        self.roblox_client: roblox.Client = (  # pylint:disable=no-member
+            self.bot.ROBLOX_CLIENT
+        )
 
         self.battery_debounce = False
-        self.check_battery.start()
+        self.check_battery.start()  # pylint:disable=no-member
 
     @tasks.loop(seconds=30.0)
     async def check_battery(self):
@@ -80,7 +82,7 @@ class Utility(commands.Cog, name="util"):
                     await message.author.send(
                         "Your message in <#1054082338268647565> was deleted because you haven't attached any files showing it off!"
                     )
-                except:
+                except:  # pylint:disable=bare-except
                     pass
 
             return
@@ -96,10 +98,10 @@ class Utility(commands.Cog, name="util"):
                     message.channel.name
                 )
 
-                user_icon_url = (
-                    await self.roblox_client.thumbnails.get_user_avatar_thumbnails(
-                        [user], roblox.AvatarThumbnailType.full_body, size="720x720"
-                    )
+                user_icon_url = await self.roblox_client.thumbnails.get_user_avatar_thumbnails(
+                    [user],
+                    roblox.AvatarThumbnailType.full_body,  # pylint:disable=no-member
+                    size="720x720",
                 )
 
                 b0bba_link = await self.bot.db.links.find_one({"roblox_id": user.id})
@@ -122,7 +124,7 @@ class Utility(commands.Cog, name="util"):
 
                 await message.channel.send(embed=embed)
 
-            except roblox.UserNotFound:
+            except roblox.UserNotFound:  # pylint:disable=no-member
                 await message.channel.send(
                     f"{message.channel.owner.mention}, the user you specified as this post name was not found! This post will be deleted in 10 seconds."
                 )
@@ -170,7 +172,7 @@ class Utility(commands.Cog, name="util"):
 
     @self_role.autocomplete("role")
     async def _self_role_autocomplete(
-        self, interaction: discord.Interaction, current: str
+        self, _: discord.Interaction, current: str
     ) -> List[app_commands.Choice[str]]:
         item_list = self.WHITELISTED_ROLE_NAMES
 
@@ -263,7 +265,7 @@ class Utility(commands.Cog, name="util"):
 
         embed = discord.Embed(
             title="OK",
-            description=f"Your timezone was set to {timezone}",
+            description=f"Your timezone was set to `{timezone}`",
             colour=Enum.Embeds.Colors.Success,
         )
 
