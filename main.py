@@ -40,7 +40,7 @@ class Bot(discord.ext.commands.Bot):
         enabled_intents.guilds = True
         enabled_intents.messages = True
 
-        super().__init__(command_prefix=["/", "jarvis"], intents=enabled_intents)
+        super().__init__(command_prefix=["/", "jarvis "], intents=enabled_intents)
 
     async def sync_application_commands(self) -> Coroutine[Any, Any, None]:
         await self.wait_until_ready()
