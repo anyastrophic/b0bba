@@ -22,6 +22,11 @@ class Moderation(commands.Cog, name="moderation"):
             reaction (_type_): The reaction
             user (discord.User): The user
         """
+        if (
+            reaction.count > 1
+        ):  # this is to make srue the user actually is spamming the reactions
+            return
+
         if user not in reaction_cache:
             reaction_cache[user] = 0
 
@@ -34,7 +39,7 @@ class Moderation(commands.Cog, name="moderation"):
                 f"`{user}` timed out for spamming reactions!", delete_after=5
             )
 
-            await user.timeout(timedelta(minutes=1), reason="Reaction spam")
+            await user.timeout(timedelta(minutes=3), reason="Reaction spam")
 
         await asyncio.sleep(20)
 
