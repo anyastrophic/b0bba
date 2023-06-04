@@ -213,7 +213,8 @@ class Utility(commands.Cog, name="util"):
         user_timezone = user_data.get("timezone")
         try:
             time_data = await Request().get(
-                f"https://timeapi.io/api/Time/current/zone?timeZone={user_timezone}"
+                "https://timeapi.io/api/Time/current/zone",
+                params={"timeZone": user_timezone},
             )
         except HttpException:
             await interaction.response.send_message(
@@ -239,7 +240,8 @@ class Utility(commands.Cog, name="util"):
         """Set your timezone"""
         try:
             await Request().get(
-                f"https://timeapi.io/api/Time/current/zone?timeZone={timezone}"
+                "https://timeapi.io/api/Time/current/zone",
+                params={"timeZone": timezone},
             )
         except HttpException as exc:
             if exc.status == 400:
