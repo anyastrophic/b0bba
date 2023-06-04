@@ -40,6 +40,15 @@ class Bot(discord.ext.commands.Bot):
         enabled_intents.guilds = True
         enabled_intents.messages = True
 
+        super().__init__(command_prefix=["/", "jarvis "], intents=enabled_intents)
+
+    async def sync_application_commands(self) -> Coroutine[Any, Any, None]:
+        await self.wait_until_ready()
+        await self.tree.sync()
+
+        Logger.Main.AppCommandsSynced()
+
+    async def setup_hook(self) -> Coroutine[Any, Any, None]:
         ROBLOX_CLIENT = roblox.Client(
             os.environ.get("ROBLOX_COOKIE"), os.environ.get("ROBLOX_API_KEY")
         )
@@ -58,15 +67,6 @@ class Bot(discord.ext.commands.Bot):
         bot.ROBLOX_GROUP = await ROBLOX_CLIENT.get_group(11205637)
         bot.ROBLOX_PLACE = await ROBLOX_CLIENT.get_place(6982988368)
 
-        super().__init__(command_prefix=["/", "jarvis "], intents=enabled_intents)
-
-    async def sync_application_commands(self) -> Coroutine[Any, Any, None]:
-        await self.wait_until_ready()
-        await self.tree.sync()
-
-        Logger.Main.AppCommandsSynced()
-
-    async def setup_hook(self) -> Coroutine[Any, Any, None]:
         for file in os.listdir("cogs"):
             if file.endswith(".py"):
                 await self.load_extension(f"cogs.{file[:-3]}")
