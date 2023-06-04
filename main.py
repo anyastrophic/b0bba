@@ -22,6 +22,7 @@ from modules.loggers import (
     Logger,
     DiscordWebhookHandler,
 )
+import modules.requests
 
 from modules.database_utils import Registration
 from modules.get_setup import get_setup
@@ -39,6 +40,8 @@ class Bot(discord.ext.commands.Bot):
         enabled_intents.members = True
         enabled_intents.guilds = True
         enabled_intents.messages = True
+
+        self.http_client = modules.requests.Client()
 
         super().__init__(command_prefix=["/", "jarvis "], intents=enabled_intents)
 

@@ -1,25 +1,23 @@
-import discord
-import roblox
 import asyncio
-import psutil
+import os
+from typing import List
+import threading
 import random
 
-import os
-import threading
+import psutil
 
-from modules.enums import Enum
-from modules.database_utils import Registration
-from modules.requests import Request
-from modules.exceptions import HttpException
-from modules.loggers import Logger
-
+import discord
+from discord import ChannelType
+from discord import app_commands
 from discord.ext import commands, tasks
 
-from discord import app_commands
+import roblox
 
-from discord import ChannelType
+from aiohttp import ClientResponseError
 
-from typing import List
+from modules.database_utils import Registration
+from modules.enums import Enum
+from modules.loggers import Logger
 
 
 class Utility(commands.Cog, name="util"):
@@ -212,11 +210,11 @@ class Utility(commands.Cog, name="util"):
 
         user_timezone = user_data.get("timezone")
         try:
-            time_data = await Request().get(
+            time_data = await self.bot.http_client.get(
                 "https://timeapi.io/api/Time/current/zone",
                 params={"timeZone": user_timezone},
             )
-        except HttpException:
+        except ClientResponseError as exc:
             await interaction.response.send_message(
                 "Something went wrong while trying to get data from the time API"
             )
@@ -239,11 +237,11 @@ class Utility(commands.Cog, name="util"):
     async def set_timezone(self, interaction: discord.Interaction, timezone: str):
         """Set your timezone"""
         try:
-            await Request().get(
+            await self.bot.http_client.get(
                 "https://timeapi.io/api/Time/current/zone",
                 params={"timeZone": timezone},
             )
-        except HttpException as exc:
+        except ClientResponseError as exc:
             if exc.status == 400:
                 embed = discord.Embed(
                     title="Error",

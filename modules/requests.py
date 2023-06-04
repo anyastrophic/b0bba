@@ -1,37 +1,52 @@
-from .exceptions import HttpException  # pylint:disable=relative-beyond-top-level
+"""A module to handle requests used by B0BBA"""
+
 import aiohttp
 
 
-class Request:
-    def __init__(self) -> None:
-        pass
+class Client:
+    """Client class for the HTTP handler"""
 
-    async def check_status(self, response):
-        if response.status == 429:
-            raise (
-                HttpException(
-                    f"Too many requests, response: {response}", response.status
-                )
-            )
-        if response.status == 401:
-            raise (
-                HttpException(f"Unauthorized, response: {response}", response.status)
-            )
-        if response.status == 400:
-            raise (HttpException(f"Bad request, response: {response}", response.status))
+    def __init__(self, **kwargs) -> None:
+        self.headers = kwargs.get("headers", {})
+        self.session = None
+
+    async def get_session(self):
+        """A method used internally by the http handler to get and cache the session
+
+        Returns:
+            ClientSession: AIOHTTP Clent session
+        """
+        if not self.session:
+            self.session = aiohttp.ClientSession(headers=self.headers)
+
+        return self.session
 
     async def get(self, url, **kwargs):
-        async with aiohttp.ClientSession(headers=kwargs.get("headers", {})) as session:
-            async with session.get(
-                url, json=kwargs.get("json", {}), params=kwargs.get("params", {})
-            ) as response:
-                await self.check_status(response)
-                return await response.json(content_type=None)
+        """Create a GET request
+
+        Args:
+            url (str): The URL
+
+        Returns:
+            dict: JSON response
+        """
+        session = await self.get_session()
+
+        async with session.get(url, **kwargs) as response:
+            response.raise_for_status()
+            return await response.json(content_type=None)
 
     async def post(self, url, **kwargs):
-        async with aiohttp.ClientSession(headers=kwargs.get("headers", {})) as session:
-            async with session.post(
-                url, json=kwargs.get("json", {}), params=kwargs.get("params", {})
-            ) as response:
-                await self.check_status(response)
-                return await response.json(content_type=None)
+        """Create a POST request
+
+        Args:
+            url (str): The URL
+
+        Returns:
+            dict: JSON Response
+        """
+        session = await self.get_session()
+
+        async with session.post(url, **kwargs) as response:
+            response.raise_for_status()
+            return await response.json(content_type=None)
