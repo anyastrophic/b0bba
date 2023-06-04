@@ -277,7 +277,7 @@ class Utility(commands.Cog, name="util"):
 
         embed = discord.Embed(
             title="OK",
-            description=f"Your timezone was set to `{timezone_to_set}`",
+            description=f"Your timezone was set to `{timezone}`",
             colour=Enum.Embeds.Colors.Success,
         )
 
