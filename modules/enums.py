@@ -3,7 +3,7 @@ class Enum:
         class Colors:
             Error = 0xFF7070
             Exception = 0xFF0000
-            Success = 0x00FF99
+            Success = 0x85FF99
             Warning = 0xFFC550
             Info = 0xFFFFFF
 
