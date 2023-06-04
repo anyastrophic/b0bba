@@ -121,7 +121,7 @@ class Owner(commands.Cog, name="owner"):
 
         await interaction.response.send_message(f"command {command} enabled")
 
-    @commands.command()
+    @commands.command(name="eval")
     async def eval_fn(self, ctx, *, code: str):
         if not is_owner(ctx.message.author):
             return
@@ -135,6 +135,8 @@ class Owner(commands.Cog, name="owner"):
     async def pull_and_restart(self, ctx):
         if not is_owner(ctx.message.author):
             return
+
+        await ctx.reply("ok")
 
         g = git.cmd.Git(".")
         g.pull()
