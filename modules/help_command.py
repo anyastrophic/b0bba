@@ -48,8 +48,6 @@ class HelpCommand:
                 return cog
 
     async def get_help(self, command: str, cogs, tree):
-        commands = tree.get_commands()
-
         command_type = await self.identify_command(command, tree)
 
         match command_type:

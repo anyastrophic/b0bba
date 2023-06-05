@@ -2,7 +2,7 @@ import random
 from modules.placeholders import Placeholder
 
 words = []
-with open(f"./games/words.txt", "r") as f:
+with open("./games/words.txt", "r", encoding="utf-8") as f:
     words = f.read().splitlines()
 
     f.close()
@@ -34,15 +34,15 @@ class HangmanGame:
         word = ""
 
         for letter_obj in self.word_sequence:
-            if letter_obj.uncovered == True:
+            if letter_obj.uncovered is True:
                 word = word + letter_obj.letter
             else:
                 word = word + "_"
 
         return word
 
-    async def get_output(self, type="mid-game") -> str:
-        match type:
+    async def get_output(self, _type="mid-game") -> str:
+        match _type:
             case "mid-game":
                 return Placeholder.Games.Hangman.GameResponses.MidGame.format(
                     self.owner, await self.get_output_word(), self.tries
@@ -63,11 +63,11 @@ class HangmanGame:
         result = False
 
         for letter_obj in self.word_sequence:
-            if letter_obj.letter == guess.lower() and letter_obj.uncovered == False:
+            if letter_obj.letter == guess.lower() and letter_obj.uncovered is False:
                 letter_obj.uncovered = True
                 result = True
 
-        if result == False:
+        if result is False:
             self.tries -= 1
 
         if self.tries == 0:

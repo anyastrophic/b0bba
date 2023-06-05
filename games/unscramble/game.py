@@ -2,7 +2,7 @@ import random
 from modules.placeholders import Placeholder
 
 words = []
-with open(f"./games/words.txt", "r") as f:
+with open("./games/words.txt", "r", encoding="utf-8") as f:
     words = f.read().splitlines()
 
     f.close()
@@ -20,8 +20,8 @@ class UnscrambleGame:
     async def get_output_word(self) -> str:
         return self.scrambled_word
 
-    async def get_output(self, type="mid-game") -> str:
-        match type:
+    async def get_output(self, _type="mid-game") -> str:
+        match _type:
             case "mid-game":
                 return Placeholder.Games.Hangman.GameResponses.MidGame.format(
                     self.owner, await self.get_output_word(), self.tries
@@ -46,13 +46,11 @@ class UnscrambleGame:
     async def guess(self, guess) -> str:
         if guess.lower() == self.word:
             return "win"
-        else:
-            self.tries -= 1
-            await self.scramble_word()
+
+        self.tries -= 1
+        await self.scramble_word()
 
         if self.tries == 0:
             return "lose"
-
-        # nothing returned, so return mid-game
 
         return "mid-game"

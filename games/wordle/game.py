@@ -1,13 +1,13 @@
 import random
 
 valid_words = []
-with open(f"./games/wordle/valid_words.txt", "r") as f:
+with open("./games/wordle/valid_words.txt", "r", encoding="utf-8") as f:
     valid_words = f.read().splitlines()
 
     f.close()
 
 words = []
-with open(f"./games/wordle/words.txt", "r") as f:
+with open("./games/wordle/words.txt", "r", encoding="utf-8") as f:
     words = f.read().splitlines()
 
     f.close()
@@ -45,7 +45,7 @@ class WordleGame:
 
         return string + " " + " ".join(guess)
 
-    async def get_output(self, type="mid-game") -> str:
+    async def get_output(self, _type="mid-game") -> str:
         string = ""
 
         black = "⬛"
@@ -56,11 +56,11 @@ class WordleGame:
         for i in range(6 - len(self.guesses)):
             string += f"\n{black}{black}{black}{black}{black}"
 
-        if type == "mid-game":
+        if _type == "mid-game":
             return f"{self.owner}'s wordle!\nGuess the word:{string}"
-        elif type == "lose":
+        elif _type == "lose":
             return f"{self.owner}'s wordle!\nYou lost!\nThe wordle:{string}\nThe word was: {self.word}"
-        elif type == "win":
+        elif _type == "win":
             return f"{self.owner}'s wordle!\nYou won!\nThe wordle:{string}\nThe word was: {self.word}"
 
     async def guess(self, guess: str):
@@ -74,7 +74,5 @@ class WordleGame:
 
         if len(self.guesses) == 6:
             return "lose"
-
-        # nothing returned, so return mid-game
 
         return "mid-game"
