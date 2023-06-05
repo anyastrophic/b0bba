@@ -1,13 +1,12 @@
+"""The discord module, a very important module."""
 import discord
-
 from discord import app_commands
-
 from discord.ext import commands
 
 from modules.database_utils import delete_data
 
-
 class GDPR(commands.Cog, name="GDPR"):
+    """Data deletion class"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -23,7 +22,11 @@ class GDPR(commands.Cog, name="GDPR"):
             )
 
         await interaction.response.send_message(
-            f"Are you sure you want to delete your data? **This action is irreversible, and will blacklist you from the bot**\nTo **confirm** data deletion, please type your discord username ({interaction.user})\nTo **cancel** data deletion, please send any message (except your discord username)"
+            "Are you sure you want to delete your data?" + 
+            "**This action is irreversible, and will blacklist you from the bot**\n" + 
+            "To **confirm** data deletion," + 
+            f"please type your discord username ({interaction.user})\n" + 
+            "To **cancel** data deletion, please send any message (except your discord username)"
         )
 
         message = await self.bot.wait_for("message", check=check)
@@ -49,4 +52,9 @@ class GDPR(commands.Cog, name="GDPR"):
 
 
 async def setup(bot):
+    """The setup function for the moderation module
+
+    Args:
+        bot (discord.Bot): The bot object
+    """
     await bot.add_cog(GDPR(bot))

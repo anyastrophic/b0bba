@@ -1,22 +1,21 @@
 """The roblox module of B0BBA"""
 
+import asyncio
 import os
 import time as _time
-import asyncio
 
-import openai
 import discord
+import openai
 import openpyxl
 import roblox
-
-from discord.ext import commands
-from discord import app_commands
 from aiohttp import ClientResponseError
+from discord import app_commands
+from discord.ext import commands
 
-from modules.roblox_utils import get_csrf
 import modules.enums as Enum
 from modules.database_utils import Registration, check_link
 from modules.loggers import Logger
+from modules.roblox_utils import get_csrf
 
 openai.api_key = "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"
 openai.organization = "org-RgAxsUuotwCUDQdjpNfSOvCE"

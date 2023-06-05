@@ -68,7 +68,7 @@ class HelpCommand:
     async def get_bot_help(self, cogs, tree):
         commands = tree.get_commands()
 
-        embed = discord.Embed(title="Help", color=Enum.EmbedColors.INFO)
+        embed = discord.Embed(title="Help", color=Enum.EmbedColors.INFO.value)
 
         for cog_name, cog in cogs.items():
             value = "\t".join(
@@ -87,7 +87,7 @@ class HelpCommand:
         command = tree.get_command(command)
 
         embed = discord.Embed(
-            title=f"{command.qualified_name} help", color=Enum.EmbedColors.INFO
+            title=f"{command.qualified_name} help", color=Enum.EmbedColors.INFO.value
         )
 
         if command.description:
@@ -100,7 +100,7 @@ class HelpCommand:
 
         embed = discord.Embed(
             title=f"**{group.qualified_name}** subcommands",
-            colour=Enum.EmbedColors.INFO,
+            colour=Enum.EmbedColors.INFO.value,
         )
         if group.description:
             embed.description = f"{group.description}"
@@ -118,7 +118,8 @@ class HelpCommand:
         cog = await self.get_cog(cog, cogs)
 
         embed = discord.Embed(
-            title=f"**{cog.qualified_name}** commands", colour=Enum.EmbedColors.INFO
+            title=f"**{cog.qualified_name}** commands",
+            colour=Enum.EmbedColors.INFO.value,
         )
         if cog.description:
             embed.description = cog.description

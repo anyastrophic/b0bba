@@ -68,6 +68,7 @@ class AI(commands.Cog, name="ai"):
     @app_commands.command()
     @commands.guild_only()
     async def gpt(self, interaction: discord.Interaction, *, prompt: str) -> None:
+        """Sends B0BBA's GPT output in an embed."""
         await interaction.response.defer()
 
         async with interaction.channel.typing():
@@ -83,11 +84,14 @@ class AI(commands.Cog, name="ai"):
 
                 with open(f"./temp/{filename}.txt", "rb") as file:
                     await interaction.followup.send(
-                        f"The response was too long, so it's sent as a file. (Author: {interaction.user})",
+                        "The response was too long," + 
+                        f"so it's sent as a file. (Author: {interaction.user})",
                         file=discord.File(file, filename="result.txt"),
                     )
 
-                os.remove(f"./temp/{filename}.txt")
+                os.remove(
+                    f"./temp/{filename}.txt"
+                )
             else:
                 embed = discord.Embed(
                     title="Result",
