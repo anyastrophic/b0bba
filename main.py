@@ -8,13 +8,12 @@ import os
 
 import roblox
 
-from discord import Intents
 from discord.flags import Intents
 from datetime import datetime
 
 from typing import Any, Coroutine
 
-from modules.error_handler import error_handler, legacy_error_handler
+from modules.error_handler import error_handler
 from modules.help_command import HelpCommand
 from modules.loggers import (
     _DiscordColorFormatter,
@@ -24,7 +23,7 @@ from modules.loggers import (
 )
 import modules.requests
 
-from modules.database_utils import Registration
+from cogs.webserver import app
 from modules.get_setup import get_setup
 
 UB_GUILD = discord.Object(id=406995309000916993)
@@ -96,40 +95,25 @@ async def on_application_command_error(ctx, error):
 
 
 @bot.event
-async def on_command_error(ctx, error):
-    """Legacy command error handler
-
-    Args:
-        ctx (discord.Context): The context
-        error (_type_): The error
-    """
-    await legacy_error_handler(bot, ctx, error)
-
-
-@bot.event
 async def on_ready():
     db_name = "b0bba" if os.environ.get("B0BBA_VERSION") == "test" else "b0bba"
     bot.db = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")[
         db_name
     ]
-    bot._registration = Registration
-
-    from cogs.webserver import app
 
     config = Config(app=app, host="0.0.0.0", port=80)
     server = Server(config)
 
     bot.loop.create_task(server.serve())
 
-    UB_GUILD = bot.get_guild(406995309000916993)
-
+    ub_guild = bot.get_guild(406995309000916993)
     bot.ub_guild = UB_GUILD
 
     channels = {}
-    channels["report-logs"] = UB_GUILD.get_channel(1100245620612137022)
-    channels["payout-logs"] = UB_GUILD.get_channel(1100275071186128987)
-    channels["server-logs"] = UB_GUILD.get_channel(1054078855066964018)
-    channels["bot-logs"] = UB_GUILD.get_channel(1109013973745016843)
+    channels["report-logs"] = ub_guild.get_channel(1100245620612137022)
+    channels["payout-logs"] = ub_guild.get_channel(1100275071186128987)
+    channels["server-logs"] = ub_guild.get_channel(1054078855066964018)
+    channels["bot-logs"] = ub_guild.get_channel(1109013973745016843)
 
     bot.ub_channels = channels
 

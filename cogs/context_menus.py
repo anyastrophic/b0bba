@@ -1,17 +1,14 @@
 """Context menus for the B0BBA bot"""
 
 import time
-
-from datetime import datetime
-
+import roblox
 import discord
+
 from discord.ext import commands
 from discord import app_commands
-
 from aiohttp import ClientResponseError
 
 from modules.database_utils import Registration
-from modules.roblox_utils import User
 from modules.enums import Enum
 
 
@@ -25,6 +22,7 @@ class ContextMenus(commands.Cog):
             bot (commands.Bot): The bot
         """
         self.bot = bot
+        self.roblox_client = bot.roblox_client
 
         whois_ctx_menu = self.whois_context_menu
         gettime_ctx_menu = self.gettime_context_menu
@@ -52,25 +50,41 @@ class ContextMenus(commands.Cog):
             user (discord.User): The user object
         """
 
-        user_id = user.id
+        snowflake_id = None
 
-        registration = await Registration(user_id).check_registration("links")
+        if user is None:
+            snowflake_id = interaction.user.id
+        else:
+            snowflake_id = user.id
+
+        registration = await Registration(snowflake_id).check_registration("links")
 
         if registration:
-            user_discord = await self.bot.fetch_user(user_id)
+            target_user_discord = await self.bot.fetch_user(snowflake_id)
+            target_user_roblox = await self.roblox_client.get_user(
+                registration["roblox_id"]
+            )
 
-            user_roblox = await User(registration["roblox_id"]).get_data()
-
-            created_on = datetime.fromisoformat(user_roblox["created"])
+            created_on = target_user_roblox.created
 
             embed = discord.Embed(
-                title=f"whois {user_discord.name}", colour=Enum.Embeds.Colors.Info
+                title=f"whois {target_user_discord.name}",
+                colour=Enum.Embeds.Colors.Info,
             )
-
             embed.add_field(
                 name="Roblox",
-                value=f"**ID:** `{registration['roblox_id']}`\n**Username:** `{user_roblox['name']}`\n**Registered On:** <t:{int(time.mktime(created_on.utctimetuple()))}:F> `({round((time.time() - time.mktime(created_on.utctimetuple())) / 86400)} days)`",
+                value=f"**ID:** `{registration['roblox_id']}`\n**Username:** `{target_user_roblox.name}`\n**Registered On:** <t:{int(time.mktime(created_on.utctimetuple()))}:F> `({round((time.time() - time.mktime(created_on.utctimetuple())) / 86400)} days)`",
             )
+
+            user_icon_url = (
+                await self.roblox_client.thumbnails.get_user_avatar_thumbnails(
+                    [target_user_roblox],
+                    roblox.AvatarThumbnailType.full_body,
+                    size="720x720",
+                )
+            )
+
+            embed.set_thumbnail(url=user_icon_url[0].image_url)
 
             await interaction.response.send_message(embed=embed)
         else:
@@ -107,7 +121,7 @@ class ContextMenus(commands.Cog):
             user_timezone = user_timezone.replace("-", "+")
 
         try:
-            time_data = await self.bot.http_client.get(
+            result = await self.bot.http_client.get(
                 "https://timeapi.io/api/Time/current/zone",
                 params={"timeZone": user_timezone},
             )
@@ -116,13 +130,13 @@ class ContextMenus(commands.Cog):
                 "Something went wrong while trying to get data from the time API"
             )
 
+        time_data = result.json.as_object()
+
         embed = discord.Embed(
-            title=time_data["time"],
+            title=time_data.time,
             colour=Enum.Embeds.Colors.Info,
         )
-        embed.add_field(
-            name="Date", value=f"`{time_data['date']}, {time_data['dayOfWeek']}`"
-        )
+        embed.add_field(name="Date", value=f"`{time_data.date}, {time_data.dayOfWeek}`")
         embed.add_field(name="Timezone", value=f"`{old_timezone}`")
         embed.set_author(
             name=f"{user.display_name}'s time", icon_url=user.display_avatar

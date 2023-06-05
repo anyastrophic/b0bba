@@ -499,50 +499,6 @@ class Economy(commands.Cog, name="economy"):
                 "You don't have enough TempleCoins!", ephemeral=True
             )
 
-    # @app_commands.command()
-    # async def crash(self, ctx, bet: int = 1, cashout_at: float = 1.0):
-    #     '''play a game of crash (goes up to 2x)'''
-
-    #     if bet < 0: return
-    #     if cashout_at < 0: return
-
-    #     if cashout_at > 2:
-    #         await interaction.response.send_message('You're cashing out too late! The maximum cashout number is 2')
-    #         return
-
-    #     registration = await Registration.economy(interaction.user.id)
-
-    #     if not await TempleCoins.get_amount(registration['inventory']) > bet:
-    #         await interaction.response.send_message('You don't have enough TempleCoins to play crash!')
-    #         return
-
-    #     multiplier = random.randint(0, 20) / 10
-    #     current_multiplier = 0
-
-    #     victory = False
-
-    #     message = await interaction.response.send_message(f'Crash!\nThe current multiplier is: **{current_multiplier}**')
-
-    #     while True:
-    #         if round(current_multiplier, 2) == cashout_at:
-    #             victory = True
-    #             break
-
-    #         if multiplier <= current_multiplier: break
-    #         current_multiplier += 0.1
-
-    #         await message.edit(content = f'Crash!\nThe current multiplier is: **{round(current_multiplier, 2)}**')
-    #         await asyncio.sleep(0.7)
-
-    #     if victory:
-    #         await message.edit(content = f'Crash ended!\nThe multiplier went up to: **{multiplier}**\nYou **won** `{int(bet * cashout_at)} TempleCoins`!')
-    #         await TempleCoins.add(registration['inventory'], int((bet * cashout_at) - bet))
-    #     else:
-    #         await message.edit(content = f'Crash ended!\nThe multiplier went up to: **{multiplier}**\nYou **lost** `{bet} TempleCoins`!')
-    #         await TempleCoins.remove(registration['inventory'], bet)
-
-    #     await self.bot.db.economy.update_one({'discord_id': interaction.user.id}, {'$set': {'inventory': registration['inventory']}})
-
     @app_commands.command()
     @commands.guild_only()
     @app_commands.checks.cooldown(1, 600)

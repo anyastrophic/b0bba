@@ -74,14 +74,14 @@ class Fun(commands.Cog, name="fun"):
                     await interaction.followup.send(await game.get_output("mid-game"))
                     try:
                         await game_loop()
-                    except Exception:
+                    except:  # pylint:disable=bare-except
                         return
                 case _:
                     await interaction.followup.send(await game.get_output(guess_result))
 
         try:
             await game_loop()
-        except Exception:
+        except:  # pylint:disable=bare-except
             return
 
         if interaction.user.id in user_games:
@@ -94,7 +94,6 @@ class Fun(commands.Cog, name="fun"):
         Args:
             interaction (discord.Interaction): discord.py interaction
         """
-        await asyncio.sleep(0.1)
         if interaction.user.id in user_games:
             user_games.pop(interaction.user.id)
 
@@ -274,7 +273,7 @@ class Fun(commands.Cog, name="fun"):
 
         img = Image.open(image_path).convert("RGB").resize((265, 265))
         img = await self.add_pfp_border(
-            img, Image.open(f"./files/{border_image_name}"), border_size
+            img, Image.open(f"./files/pride_flags/{border_image_name}"), border_size
         )
 
         buffer = BytesIO()
@@ -289,7 +288,7 @@ class Fun(commands.Cog, name="fun"):
 
     pfp_commands = app_commands.Group(name="pfp", description="PFP border commands")
 
-    flag_list = os.listdir("./files")
+    flag_list = os.listdir("./files/pride_flags")
 
     @pfp_commands.command()
     @app_commands.checks.cooldown(1, 10)
@@ -298,7 +297,9 @@ class Fun(commands.Cog, name="fun"):
     ):
         """Adds a pride flag border of your choice to your profile picture"""
         if flag not in self.flag_list:
-            await interaction.response.send_message("This flag doesn't exist!")
+            await interaction.response.send_message(
+                "This flag doesn't exist in the bot!"
+            )
             return
 
         await self.pfp_command(interaction, border_size, flag)

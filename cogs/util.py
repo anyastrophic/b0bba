@@ -1,8 +1,8 @@
-import asyncio
+"""The utility module of b0bba"""
+
 import os
 from typing import List
 import threading
-import random
 
 import psutil
 
@@ -42,11 +42,12 @@ class Utility(commands.Cog, name="util"):
                 and not battery.power_plugged
                 and not self.battery_debounce
             ):
-                t = threading.Thread(
-                    target=os.system, args=["ffplay alert.mp3 -autoexit -nodisp"]
+                thread = threading.Thread(
+                    target=os.system,
+                    args=["ffplay ./files/alert.mp3 -autoexit -nodisp"],
                 )
 
-                t.start()
+                thread.start()
 
                 self.battery_debounce = True
 
@@ -55,14 +56,14 @@ class Utility(commands.Cog, name="util"):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id == 483011136006914078:
-            pookie = discord.File("POOKIE.mp4", filename="POOKIE.mp3")
-            if random.randint(1, 50) == 50:
-                await message.reply(file=pookie)
+        """A function called when the bot sees a new message
 
+        Args:
+            message (discord.Message): The message
+        """
         if (
             message.channel.id == 1054082338268647565
-            and message.author.id != 1085454927259779093
+            and message.author.id != self.bot.user.id
         ):
             if message.attachments:
                 thread = await message.channel.create_thread(
@@ -80,55 +81,22 @@ class Utility(commands.Cog, name="util"):
                     await message.author.send(
                         "Your message in <#1054082338268647565> was deleted because you haven't attached any files showing it off!"
                     )
-                except:  # pylint:disable=bare-except
+                except discord.Forbidden:
                     pass
 
             return
 
         if (
-            message.channel.type == discord.ChannelType.public_thread
-            and message.channel.parent.id == 1063317564207403008
-            and message.author.id != 1085454927259779093
-            and message == message.channel.starter_message
+            message.channel.id == 1115081544462250085
+            and message.author.id != self.bot.user.id
         ):
-            try:
-                user = await self.roblox_client.get_user_by_username(
-                    message.channel.name
-                )
+            thread = await message.channel.create_thread(
+                name="Discussion",
+                message=message,
+                type=ChannelType.public_thread,
+            )
 
-                user_icon_url = await self.roblox_client.thumbnails.get_user_avatar_thumbnails(
-                    [user],
-                    roblox.AvatarThumbnailType.full_body,  # pylint:disable=no-member
-                    size="720x720",
-                )
-
-                b0bba_link = await self.bot.db.links.find_one({"roblox_id": user.id})
-
-                embed = discord.Embed(
-                    title=f"Here's what I could find about {user.name}!",
-                    description=f"[Profile link](https://www.roblox.com/users/{user.id}/profile)",
-                    colour=Enum.Embeds.Colors.Info,
-                )
-
-                embed.set_thumbnail(url=user_icon_url[0].image_url)
-
-                embed.add_field(name="Roblox ID", value=f"`{user.id}`", inline=False)
-
-                embed.add_field(
-                    name="Is user verified with B0BBA?",
-                    value=f'Yes, <@{b0bba_link["discord_id"]}>' if b0bba_link else "No",
-                    inline=False,
-                )
-
-                await message.channel.send(embed=embed)
-
-            except roblox.UserNotFound:  # pylint:disable=no-member
-                await message.channel.send(
-                    f"{message.channel.owner.mention}, the user you specified as this post name was not found! This post will be deleted in 10 seconds."
-                )
-
-                await asyncio.sleep(10)
-                await message.channel.delete()
+            await thread.send("You can discuss this feature here!")
 
     @app_commands.command()
     @commands.guild_only()
@@ -222,7 +190,7 @@ class Utility(commands.Cog, name="util"):
             user_timezone = user_timezone.replace("-", "+")
 
         try:
-            time_data = await self.bot.http_client.get(
+            result = await self.bot.http_client.get(
                 "https://timeapi.io/api/Time/current/zone",
                 params={"timeZone": user_timezone},
             )
@@ -231,13 +199,13 @@ class Utility(commands.Cog, name="util"):
                 "Something went wrong while trying to get data from the time API"
             )
 
+        time_data = result.json.as_object()
+
         embed = discord.Embed(
-            title=time_data["time"],
+            title=time_data.time,
             colour=Enum.Embeds.Colors.Info,
         )
-        embed.add_field(
-            name="Date", value=f"`{time_data['date']}, {time_data['dayOfWeek']}`"
-        )
+        embed.add_field(name="Date", value=f"`{time_data.date}, {time_data.dayOfWeek}`")
         embed.add_field(name="Timezone", value=f"`{old_timezone}`")
         embed.set_author(
             name=f"{user.display_name}'s time", icon_url=user.display_avatar
@@ -285,34 +253,11 @@ class Utility(commands.Cog, name="util"):
 
         Logger.Time.Timezone.UserSetTimezone(interaction.user, timezone)
 
-    # @app_commands.command()
-    # async def to_ub_markdown(self, interaction: discord.Interaction):
-    #     messages = [await interaction.channel.history(limit=10)]
-    #     markdown = messages[0].content
-
-    #     filename = f'{secrets.token_hex(4)}.md'
-
-    #     with open('./temp/{filename}', 'w') as f:
-    #         f.write(markdown)
-    #         f.close()
-
-    #     with open('./temp/{filename}', 'r') as fin:
-    #         rendered = mistletoe.markdown(fin)
-
-    #         parsed_html = BeautifulSoup(rendered, features="html.parser")
-
-    #         parsed_html.find_all()
-
-    #         generated_ub_markdown = ""
-
-    #         for tag in parsed_html.find_all():
-    #             if tag.name == 'h1':
-    #                 generated_ub_markdown += f'Mark.Title("{str(tag.string)}")'
-
-    #     await interaction.response.send_message(
-    #         f'```lua\n{generated_ub_markdown}\n```'
-    #     )
-
 
 async def setup(bot):
+    """A function that gets called upon setup of the cog
+
+    Args:
+        bot (discord.Bot): The bot
+    """
     await bot.add_cog(Utility(bot))
