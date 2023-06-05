@@ -1,26 +1,26 @@
-"""The utility module of b0bba"""
+"""The utility module of b0bba
+
+W0212 - Protected Acess. Line 157
+"""
 
 import os
-from typing import List
 import threading
-
-import psutil
+from typing import List
 
 import discord
-from discord import ChannelType
-from discord import app_commands
+import psutil
+import roblox
+from aiohttp import ClientResponseError
+from discord import ChannelType, app_commands
 from discord.ext import commands, tasks
 
-import roblox
-
 import modules.enums as Enum
-
-from aiohttp import ClientResponseError
 from modules.database_utils import Registration
 from modules.loggers import Logger
 
 
 class Utility(commands.Cog, name="util"):
+    """The utilities of B0BBA"""
     def __init__(self, bot):
         self.bot = bot
         self.roblox_client: roblox.Client = (  # pylint:disable=no-member
@@ -32,6 +32,7 @@ class Utility(commands.Cog, name="util"):
 
     @tasks.loop(seconds=30.0)
     async def check_battery(self):
+        """Checks the battery"""
         battery = psutil.sensors_battery()
         if battery is not None:
             if battery.percent > 10:
@@ -79,7 +80,8 @@ class Utility(commands.Cog, name="util"):
 
                 try:
                     await message.author.send(
-                        "Your message in <#1054082338268647565> was deleted because you haven't attached any files showing it off!"
+                        "Your message in <#1054082338268647565> was deleted" + 
+                        "because you haven't attached any files showing it off!"
                     )
                 except discord.Forbidden:
                     pass
@@ -174,7 +176,8 @@ class Utility(commands.Cog, name="util"):
         if not user_data or not user_data.get("timezone"):
             embed = discord.Embed(
                 title="Error",
-                description="This user hasn't added their timezone to the bot! ( `/time set_timezone` )",
+                description="This user hasn't added their timezone" +
+                "to the bot! ( `/time set_timezone` )",
                 colour=Enum.EmbedColors.ERROR.value,
             )
 
@@ -225,7 +228,10 @@ class Utility(commands.Cog, name="util"):
             if exc.status == 400:
                 embed = discord.Embed(
                     title="Error",
-                    description="This timezone doesn't exist! Here's a list with existing timezones: <https://timeapi.io/api/TimeZone/AvailableTimeZones>\n*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
+                    description="This timezone doesn't exist!" +
+                     "Here's a list with existing timezones:" + 
+                     "<https://timeapi.io/api/TimeZone/AvailableTimeZones>\n" + 
+                     "*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
                     colour=Enum.EmbedColors.ERROR.value,
                 )
                 await interaction.response.send_message(embed=embed)

@@ -1,30 +1,23 @@
 import asyncio
-from uvicorn import Config, Server
-import discord
 import logging
-import discord.ext.commands
-import motor.motor_asyncio
 import os
-
-import roblox
-
-from discord.flags import Intents
 from datetime import datetime
-
 from typing import Any, Coroutine
 
-from modules.error_handler import error_handler
-from modules.help_command import HelpCommand
-from modules.loggers import (
-    _DiscordColorFormatter,
-    _ColourFormatter,
-    Logger,
-    DiscordWebhookHandler,
-)
-import modules.requests
+import discord
+import discord.ext.commands
+import motor.motor_asyncio
+import roblox
+from discord.flags import Intents
+from uvicorn import Config, Server
 
+import modules.requests
 from cogs.webserver import app
+from modules.error_handler import error_handler
 from modules.get_setup import get_setup
+from modules.help_command import HelpCommand
+from modules.loggers import (DiscordWebhookHandler, Logger, _ColourFormatter,
+                             _DiscordColorFormatter)
 
 UB_GUILD = discord.Object(id=406995309000916993)
 
