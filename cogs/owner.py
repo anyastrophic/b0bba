@@ -7,7 +7,6 @@ from discord.ext import commands
 from discord import app_commands
 
 from modules.database_utils import Registration
-from modules.extensions import load_extensions, unload_extensions
 from modules.eval import Eval
 
 
@@ -74,17 +73,6 @@ class Owner(commands.Cog, name="owner"):
 
         os.startfile("main.py")
         sys.exit()
-
-    @owner_commands.command()
-    @commands.is_owner()
-    async def reload_all(self, interaction: discord.Interaction):
-        if not is_owner(interaction.user):
-            return
-
-        await interaction.response.send_message("Reloading modules")
-
-        await unload_extensions(self.bot)
-        await load_extensions(self.bot)
 
     @owner_commands.command()
     @commands.is_owner()
