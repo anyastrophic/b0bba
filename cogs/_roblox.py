@@ -74,7 +74,7 @@ class Roblox(commands.Cog, name="roblox"):
                 embed = discord.Embed(
                     title=f"Here's what I could find about {user.name}!",
                     description=f"[Profile link](https://www.roblox.com/users/{user.id}/profile)",
-                    colour=Enum.EmbedColors.INFO,
+                    colour=Enum.EmbedColors.INFO.value,
                 )
 
                 embed.set_thumbnail(url=user_icon_url[0].image_url)
@@ -120,7 +120,7 @@ class Roblox(commands.Cog, name="roblox"):
 
             embed = discord.Embed(
                 title=f"whois {target_user_discord.name}",
-                colour=Enum.EmbedColors.INFO,
+                colour=Enum.EmbedColors.INFO.value,
             )
             embed.add_field(
                 name="Roblox",
@@ -236,7 +236,7 @@ class Roblox(commands.Cog, name="roblox"):
             embed = discord.Embed(
                 title="Roles received",
                 description=f"You got these roles: \n\n{roles_received}",
-                colour=Enum.EmbedColors.INFO,
+                colour=Enum.EmbedColors.INFO.value,
             )
         else:
             embed = discord.Embed(
@@ -256,7 +256,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         servers = await self.place.get_instances()
         servers = servers.collection
-        embed = discord.Embed(title="Game Servers", colour=Enum.EmbedColors.INFO)
+        embed = discord.Embed(title="Game Servers", colour=Enum.EmbedColors.INFO.value)
 
         for server in servers:
             embed.add_field(
@@ -304,7 +304,9 @@ class Roblox(commands.Cog, name="roblox"):
         fps = server_info.fps
         age = server_info.age
 
-        embed = discord.Embed(title="Game Server Info", colour=Enum.EmbedColors.INFO)
+        embed = discord.Embed(
+            title="Game Server Info", colour=Enum.EmbedColors.INFO.value
+        )
         embed.add_field(name="Server ID", value=f"`{server_id}`", inline=False)
         embed.add_field(name="Max Players", value="`20`", inline=False)
         embed.add_field(
@@ -346,7 +348,7 @@ class Roblox(commands.Cog, name="roblox"):
         embed = discord.Embed(
             title="Report closed",
             description=f"[Jump to report]({interaction.channel.jump_url})",
-            colour=Enum.EmbedColors.INFO,
+            colour=Enum.EmbedColors.INFO.value,
         )
 
         embed.add_field(name="Admin", value=interaction.user.mention, inline=False)
@@ -547,7 +549,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         Logger.Payout.Success(interaction.user, admin)
 
-        embed = discord.Embed(title="Admin payout", colour=Enum.EmbedColors.INFO)
+        embed = discord.Embed(title="Admin payout", colour=Enum.EmbedColors.INFO.value)
         embed.add_field(name="Admin", value=f"{admin}", inline=False)
         embed.add_field(
             name="Manager, who paid out", value=f"{interaction.user}", inline=False
@@ -747,7 +749,9 @@ class Roblox(commands.Cog, name="roblox"):
 
         channel = interaction.guild.get_channel(1056047980861476945)
 
-        embed = discord.Embed(title="Gamebanned a player", colour=Enum.EmbedColors.INFO)
+        embed = discord.Embed(
+            title="Gamebanned a player", colour=Enum.EmbedColors.INFO.value
+        )
         embed.add_field(name="Player:", value=target_username, inline=False)
         embed.add_field(name="Duration:", value=f"{time} {unit.name}s", inline=False)
         embed.add_field(name="Reason:", value=reason, inline=False)
@@ -804,7 +808,7 @@ class Roblox(commands.Cog, name="roblox"):
         channel = interaction.guild.get_channel(1056047980861476945)
 
         embed = discord.Embed(
-            title="Ungamebanned a player", colour=Enum.EmbedColors.INFO
+            title="Ungamebanned a player", colour=Enum.EmbedColors.INFO.value
         )
         embed.add_field(name="Reason:", value=reason, inline=False)
 
@@ -848,7 +852,7 @@ class Roblox(commands.Cog, name="roblox"):
         target_username = target_user.name
 
         embed = discord.Embed(
-            title=f"{target_username}'s ban state", colour=Enum.EmbedColors.INFO
+            title=f"{target_username}'s ban state", colour=Enum.EmbedColors.INFO.value
         )
 
         embed.add_field(
@@ -900,7 +904,7 @@ class Roblox(commands.Cog, name="roblox"):
         embed = discord.Embed(
             title="Game Command Ran",
             description=f"command `{command}` executed on server `{server_id}`",
-            colour=Enum.EmbedColors.INFO,
+            colour=Enum.EmbedColors.INFO.value,
         )
 
         thumbnails = await self.roblox_client.thumbnails.get_user_avatar_thumbnails(

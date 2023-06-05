@@ -57,6 +57,8 @@ async def error_handler(bot, interaction: discord.Interaction, error):
             return
 
     embed = discord.Embed(
-        title="Exception", description=description, color=Enum.EmbedColors.EXCEPTION
+        title="Exception",
+        description=description,
+        color=Enum.EmbedColors.EXCEPTION.value,
     )
     await interaction.response.send_message(embed=embed, ephemeral=ephemeral)
