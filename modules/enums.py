@@ -1,14 +1,22 @@
-class Enum:
-    class Embeds:
-        class Colors:
-            Error = 0xFF7070
-            Exception = 0xFF0000
-            Success = 0x85FF99
-            Warning = 0xFFC550
-            Info = 0xFFFFFF
+"""A module containing the Enums b0bba uses"""
 
-    class Roles:
-        UB_Admin = 1054075583597903872
-        UB_Trial_Admin = 1054076384328286259
-        UB_Senior_Admin = 1056050823769104484
-        UB_Junior_Admin = 1056050831549550724
+from enum import Enum
+
+
+class EmbedColors(Enum):
+    """An Enum containing embed colors"""
+
+    ERROR = 0xFF7070
+    EXCEPTION = 0xFF0000
+    SUCCESS = 0x85FF99
+    WARNING = 0xFFC550
+    INFO = 0xFFFFFF
+
+
+class Roles(Enum):
+    """An Enum containing role ids"""
+
+    UB_ADMIN = 1054075583597903872
+    UB_TRIAL_ADMIN = 1054076384328286259
+    UB_SENIOR_ADMIN = 1056050823769104484
+    UB_JUNIOR_ADMIN = 1056050831549550724

@@ -11,7 +11,8 @@ from discord import app_commands
 from discord.ext import commands
 
 from async_openai import OpenAI
-from modules.enums import Enum
+
+import modules.enums as Enum
 from modules.gpt_data import prompts as FED_DATA
 
 FREE_MODELS = ["gpt-3.5-turbo"]
@@ -91,7 +92,7 @@ class AI(commands.Cog, name="ai"):
                 embed = discord.Embed(
                     title="Result",
                     description=result_string,
-                    colour=Enum.Embeds.Colors.Success,
+                    colour=Enum.EmbedColors.SUCCESS,
                 )
                 embed.set_author(
                     name="BIG Thanks to corrupted sackboye#6711 for helping to revive B0BBA GPT!"

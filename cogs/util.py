@@ -13,10 +13,10 @@ from discord.ext import commands, tasks
 
 import roblox
 
-from aiohttp import ClientResponseError
+import modules.enums as Enum
 
+from aiohttp import ClientResponseError
 from modules.database_utils import Registration
-from modules.enums import Enum
 from modules.loggers import Logger
 
 
@@ -117,7 +117,7 @@ class Utility(commands.Cog, name="util"):
                 embed = discord.Embed(
                     title="Role given",
                     description=f"Role `{role}` was given to you!",
-                    colour=Enum.Embeds.Colors.Success,
+                    colour=Enum.EmbedColors.SUCCESS,
                 )
 
                 await interaction.response.send_message(embed=embed)
@@ -127,7 +127,7 @@ class Utility(commands.Cog, name="util"):
                 embed = discord.Embed(
                     title="Role taken",
                     description=f"Role `{role}` was taken from you!",
-                    colour=Enum.Embeds.Colors.Success,
+                    colour=Enum.EmbedColors.SUCCESS,
                 )
 
                 await interaction.response.send_message(embed=embed)
@@ -175,7 +175,7 @@ class Utility(commands.Cog, name="util"):
             embed = discord.Embed(
                 title="Error",
                 description="This user hasn't added their timezone to the bot! ( `/time set_timezone` )",
-                colour=Enum.Embeds.Colors.Error,
+                colour=Enum.EmbedColors.ERROR,
             )
 
             await interaction.response.send_message(embed=embed)
@@ -203,7 +203,7 @@ class Utility(commands.Cog, name="util"):
 
         embed = discord.Embed(
             title=time_data.time,
-            colour=Enum.Embeds.Colors.Info,
+            colour=Enum.EmbedColors.INFO,
         )
         embed.add_field(name="Date", value=f"`{time_data.date}, {time_data.dayOfWeek}`")
         embed.add_field(name="Timezone", value=f"`{old_timezone}`")
@@ -226,7 +226,7 @@ class Utility(commands.Cog, name="util"):
                 embed = discord.Embed(
                     title="Error",
                     description="This timezone doesn't exist! Here's a list with existing timezones: <https://timeapi.io/api/TimeZone/AvailableTimeZones>\n*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
-                    colour=Enum.Embeds.Colors.Error,
+                    colour=Enum.EmbedColors.ERROR,
                 )
                 await interaction.response.send_message(embed=embed)
                 return
@@ -246,7 +246,7 @@ class Utility(commands.Cog, name="util"):
         embed = discord.Embed(
             title="OK",
             description=f"Your timezone was set to `{timezone}`",
-            colour=Enum.Embeds.Colors.Success,
+            colour=Enum.EmbedColors.SUCCESS,
         )
 
         await interaction.response.send_message(embed=embed)

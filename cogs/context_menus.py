@@ -9,7 +9,8 @@ from discord import app_commands
 from aiohttp import ClientResponseError
 
 from modules.database_utils import Registration
-from modules.enums import Enum
+
+import modules.enums as Enum
 
 
 class ContextMenus(commands.Cog):
@@ -69,7 +70,7 @@ class ContextMenus(commands.Cog):
 
             embed = discord.Embed(
                 title=f"whois {target_user_discord.name}",
-                colour=Enum.Embeds.Colors.Info,
+                colour=Enum.EmbedColors.INFO,
             )
             embed.add_field(
                 name="Roblox",
@@ -106,7 +107,7 @@ class ContextMenus(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 description="This user hasn't added their timezone to the bot! ( `/time set_timezone` )",
-                colour=Enum.Embeds.Colors.Error,
+                colour=Enum.EmbedColors.ERROR,
             )
 
             await interaction.response.send_message(embed=embed)
@@ -134,7 +135,7 @@ class ContextMenus(commands.Cog):
 
         embed = discord.Embed(
             title=time_data.time,
-            colour=Enum.Embeds.Colors.Info,
+            colour=Enum.EmbedColors.INFO,
         )
         embed.add_field(name="Date", value=f"`{time_data.date}, {time_data.dayOfWeek}`")
         embed.add_field(name="Timezone", value=f"`{old_timezone}`")

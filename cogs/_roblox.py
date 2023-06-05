@@ -14,7 +14,7 @@ from discord import app_commands
 from aiohttp import ClientResponseError
 
 from modules.roblox_utils import get_csrf
-from modules.enums import Enum
+import modules.enums as Enum
 from modules.database_utils import Registration, check_link
 from modules.loggers import Logger
 
@@ -74,7 +74,7 @@ class Roblox(commands.Cog, name="roblox"):
                 embed = discord.Embed(
                     title=f"Here's what I could find about {user.name}!",
                     description=f"[Profile link](https://www.roblox.com/users/{user.id}/profile)",
-                    colour=Enum.Embeds.Colors.Info,
+                    colour=Enum.EmbedColors.INFO,
                 )
 
                 embed.set_thumbnail(url=user_icon_url[0].image_url)
@@ -120,7 +120,7 @@ class Roblox(commands.Cog, name="roblox"):
 
             embed = discord.Embed(
                 title=f"whois {target_user_discord.name}",
-                colour=Enum.Embeds.Colors.Info,
+                colour=Enum.EmbedColors.INFO,
             )
             embed.add_field(
                 name="Roblox",
@@ -236,13 +236,13 @@ class Roblox(commands.Cog, name="roblox"):
             embed = discord.Embed(
                 title="Roles received",
                 description=f"You got these roles: \n\n{roles_received}",
-                colour=Enum.Embeds.Colors.Info,
+                colour=Enum.EmbedColors.INFO,
             )
         else:
             embed = discord.Embed(
                 title="No roles received",
                 description="You didn't get any new roles",
-                colour=Enum.Embeds.Colors.Warning,
+                colour=Enum.EmbedColors.WARNING,
             )
 
         await interaction.response.send_message(embed=embed)
@@ -256,7 +256,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         servers = await self.place.get_instances()
         servers = servers.collection
-        embed = discord.Embed(title="Game Servers", colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title="Game Servers", colour=Enum.EmbedColors.INFO)
 
         for server in servers:
             embed.add_field(
@@ -286,13 +286,13 @@ class Roblox(commands.Cog, name="roblox"):
                     embed = discord.Embed(
                         title="Error",
                         description="No server with this ID exists!",
-                        colour=Enum.Embeds.Colors.Error,
+                        colour=Enum.EmbedColors.ERROR,
                     )
                 case _:
                     embed = discord.Embed(
                         title="Exception",
                         description=f"There was an error while trying to get server info!\nStatus code: {exc.status}",
-                        colour=Enum.Embeds.Colors.Exception,
+                        colour=Enum.EmbedColors.EXCEPTION,
                     )
 
             await interaction.followup.send(embed=embed)
@@ -304,7 +304,7 @@ class Roblox(commands.Cog, name="roblox"):
         fps = server_info.fps
         age = server_info.age
 
-        embed = discord.Embed(title="Game Server Info", colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title="Game Server Info", colour=Enum.EmbedColors.INFO)
         embed.add_field(name="Server ID", value=f"`{server_id}`", inline=False)
         embed.add_field(name="Max Players", value="`20`", inline=False)
         embed.add_field(
@@ -321,10 +321,10 @@ class Roblox(commands.Cog, name="roblox"):
     @report_commands.command()
     @commands.guild_only()
     @app_commands.checks.has_any_role(
-        Enum.Roles.UB_Admin,
-        Enum.Roles.UB_Junior_Admin,
-        Enum.Roles.UB_Senior_Admin,
-        Enum.Roles.UB_Trial_Admin,
+        Enum.Roles.UB_ADMIN,
+        Enum.Roles.UB_JUNIOR_ADMIN,
+        Enum.Roles.UB_SENIOR_ADMIN,
+        Enum.Roles.UB_TRIAL_ADMIN,
     )
     async def close(self, interaction: discord.Interaction, *, verdict: str):
         """close the report"""
@@ -346,7 +346,7 @@ class Roblox(commands.Cog, name="roblox"):
         embed = discord.Embed(
             title="Report closed",
             description=f"[Jump to report]({interaction.channel.jump_url})",
-            colour=Enum.Embeds.Colors.Info,
+            colour=Enum.EmbedColors.INFO,
         )
 
         embed.add_field(name="Admin", value=interaction.user.mention, inline=False)
@@ -547,7 +547,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         Logger.Payout.Success(interaction.user, admin)
 
-        embed = discord.Embed(title="Admin payout", colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title="Admin payout", colour=Enum.EmbedColors.INFO)
         embed.add_field(name="Admin", value=f"{admin}", inline=False)
         embed.add_field(
             name="Manager, who paid out", value=f"{interaction.user}", inline=False
@@ -636,11 +636,10 @@ class Roblox(commands.Cog, name="roblox"):
     @robloxmod_commands.command()
     @commands.guild_only()
     @app_commands.checks.has_any_role(
-        Enum.Roles.UB_Admin,
-        Enum.Roles.UB_Junior_Admin,
-        Enum.Roles.UB_Senior_Admin,
-        Enum.Roles.UB_Trial_Admin,
-        1003365453588070552,
+        Enum.Roles.UB_ADMIN,
+        Enum.Roles.UB_JUNIOR_ADMIN,
+        Enum.Roles.UB_SENIOR_ADMIN,
+        Enum.Roles.UB_TRIAL_ADMIN,
     )  # 1003365453588070552 is manslaughter for testing
     async def globalmessage(
         self,
@@ -665,7 +664,7 @@ class Roblox(commands.Cog, name="roblox"):
             embed = discord.Embed(
                 title="Game Global Message",
                 description=f"message `{message}` succesfully sent to every server",
-                colour=Enum.Embeds.Colors.Success,
+                colour=Enum.EmbedColors.SUCCESS,
             )
 
             await interaction.response.send_message(embed=embed)
@@ -679,18 +678,17 @@ class Roblox(commands.Cog, name="roblox"):
             embed = discord.Embed(
                 title="Game Global Message",
                 description=f"message send failure:\nstatus: {result.status}\n\n<@804066391614423061>",
-                colour=Enum.Embeds.Colors.Error,
+                colour=Enum.EmbedColors.ERROR,
             )
 
             await interaction.response.send_message(embed=embed)
 
     @robloxmod_commands.command()
     @app_commands.checks.has_any_role(
-        Enum.Roles.UB_Admin,
-        Enum.Roles.UB_Junior_Admin,
-        Enum.Roles.UB_Senior_Admin,
-        Enum.Roles.UB_Trial_Admin,
-        1003365453588070552,
+        Enum.Roles.UB_ADMIN,
+        Enum.Roles.UB_JUNIOR_ADMIN,
+        Enum.Roles.UB_SENIOR_ADMIN,
+        Enum.Roles.UB_TRIAL_ADMIN,
     )
     @app_commands.choices(
         unit=[
@@ -749,9 +747,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         channel = interaction.guild.get_channel(1056047980861476945)
 
-        embed = discord.Embed(
-            title="Gamebanned a player", colour=Enum.Embeds.Colors.Info
-        )
+        embed = discord.Embed(title="Gamebanned a player", colour=Enum.EmbedColors.INFO)
         embed.add_field(name="Player:", value=target_username, inline=False)
         embed.add_field(name="Duration:", value=f"{time} {unit.name}s", inline=False)
         embed.add_field(name="Reason:", value=reason, inline=False)
@@ -769,10 +765,10 @@ class Roblox(commands.Cog, name="roblox"):
     @robloxmod_commands.command()
     @commands.guild_only()
     @app_commands.checks.has_any_role(
-        Enum.Roles.UB_Admin,
-        Enum.Roles.UB_Junior_Admin,
-        Enum.Roles.UB_Senior_Admin,
-        Enum.Roles.UB_Trial_Admin,
+        Enum.Roles.UB_ADMIN,
+        Enum.Roles.UB_JUNIOR_ADMIN,
+        Enum.Roles.UB_SENIOR_ADMIN,
+        Enum.Roles.UB_TRIAL_ADMIN,
     )
     async def ungameban(
         self, interaction: discord.Interaction, target_user: str, reason: str
@@ -808,7 +804,7 @@ class Roblox(commands.Cog, name="roblox"):
         channel = interaction.guild.get_channel(1056047980861476945)
 
         embed = discord.Embed(
-            title="Ungamebanned a player", colour=Enum.Embeds.Colors.Info
+            title="Ungamebanned a player", colour=Enum.EmbedColors.INFO
         )
         embed.add_field(name="Reason:", value=reason, inline=False)
 
@@ -825,11 +821,10 @@ class Roblox(commands.Cog, name="roblox"):
     @robloxmod_commands.command()
     @commands.guild_only()
     @app_commands.checks.has_any_role(
-        Enum.Roles.UB_Admin,
-        Enum.Roles.UB_Junior_Admin,
-        Enum.Roles.UB_Senior_Admin,
-        Enum.Roles.UB_Trial_Admin,
-        1003365453588070552,
+        Enum.Roles.UB_ADMIN,
+        Enum.Roles.UB_JUNIOR_ADMIN,
+        Enum.Roles.UB_SENIOR_ADMIN,
+        Enum.Roles.UB_TRIAL_ADMIN,
     )
     async def get_ban_state(self, interaction: discord.Interaction, target_user: str):
         """get ban info about a user"""
@@ -853,7 +848,7 @@ class Roblox(commands.Cog, name="roblox"):
         target_username = target_user.name
 
         embed = discord.Embed(
-            title=f"{target_username}'s ban state", colour=Enum.Embeds.Colors.Info
+            title=f"{target_username}'s ban state", colour=Enum.EmbedColors.INFO
         )
 
         embed.add_field(
@@ -869,10 +864,10 @@ class Roblox(commands.Cog, name="roblox"):
     @robloxmod_commands.command()
     @commands.guild_only()
     @app_commands.checks.has_any_role(
-        Enum.Roles.UB_Admin,
-        Enum.Roles.UB_Junior_Admin,
-        Enum.Roles.UB_Senior_Admin,
-        Enum.Roles.UB_Trial_Admin,
+        Enum.Roles.UB_ADMIN,
+        Enum.Roles.UB_JUNIOR_ADMIN,
+        Enum.Roles.UB_SENIOR_ADMIN,
+        Enum.Roles.UB_TRIAL_ADMIN,
     )
     async def execute(
         self, interaction: discord.Interaction, server_id: str, *, command: str
@@ -895,7 +890,7 @@ class Roblox(commands.Cog, name="roblox"):
         embed = discord.Embed(
             title="Game Command",
             description=f"command `{command}` succesfully executed on server `{server_id}`",
-            colour=Enum.Embeds.Colors.Success,
+            colour=Enum.EmbedColors.SUCCESS,
         )
 
         await interaction.response.send_message(embed=embed)
@@ -905,7 +900,7 @@ class Roblox(commands.Cog, name="roblox"):
         embed = discord.Embed(
             title="Game Command Ran",
             description=f"command `{command}` executed on server `{server_id}`",
-            colour=Enum.Embeds.Colors.Info,
+            colour=Enum.EmbedColors.INFO,
         )
 
         thumbnails = await self.roblox_client.thumbnails.get_user_avatar_thumbnails(

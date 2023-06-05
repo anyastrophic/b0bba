@@ -9,6 +9,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands, tasks
 
+import modules.enums as Enum
+
 from modules.economy_utils import (
     probably,
     get_stock_info,
@@ -19,7 +21,6 @@ from modules.database_utils import (
     get_marketplace_listings,
 )
 
-from modules.enums import Enum
 from modules.loggers import Logger
 
 exchange_values = {"TempleCoin": {"deletes": 1337, "copies": 1337}}
@@ -107,7 +108,7 @@ class Economy(commands.Cog, name="economy"):
         embed = discord.Embed(
             title=f"{item} info",
             description=ITEMS[item],
-            colour=Enum.Embeds.Colors.Info,
+            colour=Enum.EmbedColors.INFO,
         )
 
         item_rarity = await get_item_rarity(item)
@@ -343,7 +344,7 @@ class Economy(commands.Cog, name="economy"):
 
         user_data = await self.bot.db.economy.find_one({"discord_id": user.id})
 
-        embed = discord.Embed(title=f"{user}'s stats", colour=Enum.Embeds.Colors.Info)
+        embed = discord.Embed(title=f"{user}'s stats", colour=Enum.EmbedColors.INFO)
 
         embed.add_field(
             name="Reputation", value=round(user_data["reputation"], 2), inline=False
@@ -762,7 +763,7 @@ class Economy(commands.Cog, name="economy"):
         embed = discord.Embed(
             title="Marketplace",
             description="Welcome to the marketplace!\nTo purchase an item, run `/marketplace buy <listing_id>`",
-            colour=Enum.Embeds.Colors.Info,
+            colour=Enum.EmbedColors.INFO,
         )
 
         for listing in _list:
@@ -1006,9 +1007,7 @@ class Economy(commands.Cog, name="economy"):
 
             return
 
-        embed = discord.Embed(
-            title=f"Listings of {user}", colour=Enum.Embeds.Colors.Info
-        )
+        embed = discord.Embed(title=f"Listings of {user}", colour=Enum.EmbedColors.INFO)
 
         for listing in listings:
             embed.add_field(
