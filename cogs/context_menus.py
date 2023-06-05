@@ -70,7 +70,7 @@ class ContextMenus(commands.Cog):
 
             embed = discord.Embed(
                 title=f"whois {target_user_discord.name}",
-                colour=Enum.EmbedColors.INFO,
+                colour=Enum.EmbedColors.INFO.value,
             )
             embed.add_field(
                 name="Roblox",
@@ -111,7 +111,7 @@ class ContextMenus(commands.Cog):
                 title="Error",
                 description="This user hasn't added their timezone to the bot!" +
                 "( `/time set_timezone` )",
-                colour=Enum.EmbedColors.ERROR,
+                colour=Enum.EmbedColors.ERROR.value,
             )
 
             await interaction.response.send_message(embed=embed)
@@ -139,7 +139,7 @@ class ContextMenus(commands.Cog):
 
         embed = discord.Embed(
             title=time_data.time,
-            colour=Enum.EmbedColors.INFO,
+            colour=Enum.EmbedColors.INFO.value,
         )
         embed.add_field(name="Date", value=f"`{time_data.date}, {time_data.dayOfWeek}`")
         embed.add_field(name="Timezone", value=f"`{old_timezone}`")

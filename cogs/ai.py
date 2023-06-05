@@ -96,7 +96,7 @@ class AI(commands.Cog, name="ai"):
                 embed = discord.Embed(
                     title="Result",
                     description=result_string,
-                    colour=Enum.EmbedColors.SUCCESS,
+                    colour=Enum.EmbedColors.SUCCESS.value,
                 )
                 embed.set_author(
                     name="BIG Thanks to corrupted sackboye#6711 for helping to revive B0BBA GPT!"

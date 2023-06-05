@@ -119,7 +119,7 @@ class Utility(commands.Cog, name="util"):
                 embed = discord.Embed(
                     title="Role given",
                     description=f"Role `{role}` was given to you!",
-                    colour=Enum.EmbedColors.SUCCESS,
+                    colour=Enum.EmbedColors.SUCCESS.value,
                 )
 
                 await interaction.response.send_message(embed=embed)
@@ -129,7 +129,7 @@ class Utility(commands.Cog, name="util"):
                 embed = discord.Embed(
                     title="Role taken",
                     description=f"Role `{role}` was taken from you!",
-                    colour=Enum.EmbedColors.SUCCESS,
+                    colour=Enum.EmbedColors.SUCCESS.value,
                 )
 
                 await interaction.response.send_message(embed=embed)
@@ -178,7 +178,7 @@ class Utility(commands.Cog, name="util"):
                 title="Error",
                 description="This user hasn't added their timezone" +
                 "to the bot! ( `/time set_timezone` )",
-                colour=Enum.EmbedColors.ERROR,
+                colour=Enum.EmbedColors.ERROR.value,
             )
 
             await interaction.response.send_message(embed=embed)
@@ -206,7 +206,7 @@ class Utility(commands.Cog, name="util"):
 
         embed = discord.Embed(
             title=time_data.time,
-            colour=Enum.EmbedColors.INFO,
+            colour=Enum.EmbedColors.INFO.value,
         )
         embed.add_field(name="Date", value=f"`{time_data.date}, {time_data.dayOfWeek}`")
         embed.add_field(name="Timezone", value=f"`{old_timezone}`")
@@ -232,7 +232,7 @@ class Utility(commands.Cog, name="util"):
                      "Here's a list with existing timezones:" + 
                      "<https://timeapi.io/api/TimeZone/AvailableTimeZones>\n" + 
                      "*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
-                    colour=Enum.EmbedColors.ERROR,
+                    colour=Enum.EmbedColors.ERROR.value,
                 )
                 await interaction.response.send_message(embed=embed)
                 return
@@ -252,7 +252,7 @@ class Utility(commands.Cog, name="util"):
         embed = discord.Embed(
             title="OK",
             description=f"Your timezone was set to `{timezone}`",
-            colour=Enum.EmbedColors.SUCCESS,
+            colour=Enum.EmbedColors.SUCCESS.value,
         )
 
         await interaction.response.send_message(embed=embed)

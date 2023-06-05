@@ -113,7 +113,7 @@ class Economy(commands.Cog, name="economy"):
         embed = discord.Embed(
             title=f"{item} info",
             description=ITEMS[item],
-            colour=Enum.EmbedColors.INFO,
+            colour=Enum.EmbedColors.INFO.value,
         )
 
         item_rarity = await get_item_rarity(item)
@@ -354,7 +354,7 @@ class Economy(commands.Cog, name="economy"):
 
         user_data = await self.bot.db.economy.find_one({"discord_id": user.id})
 
-        embed = discord.Embed(title=f"{user}'s stats", colour=Enum.EmbedColors.INFO)
+        embed = discord.Embed(title=f"{user}'s stats", colour=Enum.EmbedColors.INFO.value)
 
         embed.add_field(
             name="Reputation", value=round(user_data["reputation"], 2), inline=False
@@ -793,9 +793,8 @@ class Economy(commands.Cog, name="economy"):
 
         embed = discord.Embed(
             title="Marketplace",
-            description="Welcome to the marketplace!\nTo purchase an item," +
-            "run `/marketplace buy <listing_id>`",
-            colour=Enum.EmbedColors.INFO,
+            description="Welcome to the marketplace!\nTo purchase an item, run `/marketplace buy <listing_id>`",
+            colour=Enum.EmbedColors.INFO.value,
         )
 
         for listing in _list:
@@ -1044,7 +1043,7 @@ class Economy(commands.Cog, name="economy"):
 
             return
 
-        embed = discord.Embed(title=f"Listings of {user}", colour=Enum.EmbedColors.INFO)
+        embed = discord.Embed(title=f"Listings of {user}", colour=Enum.EmbedColors.INFO.value)
 
         for listing in listings:
             embed.add_field(

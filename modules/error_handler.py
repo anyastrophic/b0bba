@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 
-from modules.enums import Enum
+import modules.enums as Enum
 
 replies = []
 
@@ -57,6 +57,8 @@ async def error_handler(bot, interaction: discord.Interaction, error):
             return
 
     embed = discord.Embed(
-        title="Exception", description=description, color=Enum.Embeds.Colors.Exception
+        title="Exception",
+        description=description,
+        color=Enum.EmbedColors.EXCEPTION.value,
     )
     await interaction.response.send_message(embed=embed, ephemeral=ephemeral)
