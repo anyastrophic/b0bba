@@ -21,6 +21,7 @@ from modules.loggers import Logger
 
 class Utility(commands.Cog, name="util"):
     """The utilities of B0BBA"""
+
     def __init__(self, bot):
         self.bot = bot
         self.roblox_client: roblox.Client = (  # pylint:disable=no-member
@@ -73,6 +74,9 @@ class Utility(commands.Cog, name="util"):
                     type=ChannelType.public_thread,
                 )
 
+                await message.add_reaction("<:UpVote:657837919272173579>")
+                await message.add_reaction("<:DownVote:657837532385378305>")
+
                 await thread.send("You can discuss this creation here!")
 
             else:
@@ -80,8 +84,8 @@ class Utility(commands.Cog, name="util"):
 
                 try:
                     await message.author.send(
-                        "Your message in <#1054082338268647565> was deleted" + 
-                        "because you haven't attached any files showing it off!"
+                        "Your message in <#1054082338268647565> was deleted"
+                        + " because you haven't attached any files showing it off!"
                     )
                 except discord.Forbidden:
                     pass
@@ -97,6 +101,9 @@ class Utility(commands.Cog, name="util"):
                 message=message,
                 type=ChannelType.public_thread,
             )
+
+            await message.add_reaction("<:UpVote:657837919272173579>")
+            await message.add_reaction("<:DownVote:657837532385378305>")
 
             await thread.send("You can discuss this feature here!")
 
@@ -176,8 +183,8 @@ class Utility(commands.Cog, name="util"):
         if not user_data or not user_data.get("timezone"):
             embed = discord.Embed(
                 title="Error",
-                description="This user hasn't added their timezone" +
-                "to the bot! ( `/time set_timezone` )",
+                description="This user hasn't added their timezone"
+                + " to the bot! ( `/time set_timezone` )",
                 colour=Enum.EmbedColors.ERROR.value,
             )
 
@@ -228,10 +235,10 @@ class Utility(commands.Cog, name="util"):
             if exc.status == 400:
                 embed = discord.Embed(
                     title="Error",
-                    description="This timezone doesn't exist!" +
-                     "Here's a list with existing timezones:" + 
-                     "<https://timeapi.io/api/TimeZone/AvailableTimeZones>\n" + 
-                     "*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
+                    description="This timezone doesn't exist!"
+                    + "Here's a list with existing timezones:"
+                    + "<https://timeapi.io/api/TimeZone/AvailableTimeZones>\n"
+                    + "*try a timezone in a format such as Etc/GMT+1 or Europe/Kyiv*",
                     colour=Enum.EmbedColors.ERROR.value,
                 )
                 await interaction.response.send_message(embed=embed)
