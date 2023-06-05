@@ -1,19 +1,16 @@
 """The webserver module of B0BBA"""
 
-import secrets
 import asyncio
-import os
-
 import json
+import os
+import secrets
+
 import discord
 import git
-
+from discord.ext import commands
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
-
-from discord.ext import commands
 
 from modules.database_utils import Registration
 

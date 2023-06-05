@@ -74,7 +74,10 @@ class ContextMenus(commands.Cog):
             )
             embed.add_field(
                 name="Roblox",
-                value=f"**ID:** `{registration['roblox_id']}`\n**Username:** `{target_user_roblox.name}`\n**Registered On:** <t:{int(time.mktime(created_on.utctimetuple()))}:F> `({round((time.time() - time.mktime(created_on.utctimetuple())) / 86400)} days)`",
+                value=f"**ID:** `{registration['roblox_id']}`\n" +
+                f"**Username:** `{target_user_roblox.name}`\n" + 
+                f"**Registered On:** <t:{int(time.mktime(created_on.utctimetuple()))}:F>" +
+                f"`({round((time.time() - time.mktime(created_on.utctimetuple())) / 86400)} days)`",
             )
 
             user_icon_url = (
@@ -106,7 +109,8 @@ class ContextMenus(commands.Cog):
         if not user_data or not user_data.get("timezone"):
             embed = discord.Embed(
                 title="Error",
-                description="This user hasn't added their timezone to the bot! ( `/time set_timezone` )",
+                description="This user hasn't added their timezone to the bot!" +
+                "( `/time set_timezone` )",
                 colour=Enum.EmbedColors.ERROR,
             )
 

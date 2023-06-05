@@ -1,4 +1,8 @@
-"""The economy module of B0BBA"""
+"""The economy module of B0BBA
+
+C0302 - Too many lines in module
+
+"""
 
 import random
 
@@ -49,7 +53,8 @@ RARITIES = {
 
 
 async def get_item_rarity(item: str) -> str:
-    for rarity in RARITIES:
+    """Gets the rarity of items"""
+    for rarity in RARITIES.items():
         if item in RARITIES[rarity]:
             return rarity
 
@@ -192,7 +197,8 @@ class Economy(commands.Cog, name="economy"):
             )
 
             await interaction.response.send_message(
-                f"You successfully purchased `{amount}` `{stock}` for `{stock_price * amount} TempleCoins`!"
+                f"You successfully purchased `{amount}` `{stock}`" +
+                f"for `{stock_price * amount} TempleCoins`!"
             )
         else:
             await interaction.response.send_message(
@@ -236,7 +242,8 @@ class Economy(commands.Cog, name="economy"):
             )
 
             await interaction.response.send_message(
-                f"You successfully sold `{amount}` `{stock}` for `{stock_price * amount} TempleCoins`!"
+                f"You successfully sold `{amount}` `{stock}`" + 
+                f"for `{stock_price * amount} TempleCoins`!"
             )
 
         else:
@@ -271,17 +278,20 @@ class Economy(commands.Cog, name="economy"):
 
                 if target is None:
                     await interaction.response.send_message(
-                        "You haven't specified a target to use this item on!"
+                        "You haven't specified a" +
+                        "target to use this item on!"
                     )
 
                     return
 
-                await self.bot.db.economy.update_one(  # clear target's copies and deletes (use item)
-                    {"discord_id": target.id}, {"$set": {"copies": 0, "deletes": 0}}
+                await self.bot.db.economy.update_one(
+                    {"discord_id": target.id},
+                    {"$set": {"copies": 0, "deletes": 0}}
                 )
 
                 await interaction.response.send_message(
-                    f"You successfully used `{item}` on `{target}`, causing them to lose all their copies and deletes!"
+                    f"You successfully used `{item}` " + 
+                    f"on `{target}`, causing them to lose all their copies and deletes!"
                 )
 
             case "Luck Resetter":
@@ -396,14 +406,16 @@ class Economy(commands.Cog, name="economy"):
             return msg.author == interaction.user and msg.channel == interaction.channel
 
         await interaction.followup.send(
-            f"Let's get building! Retype this: `{fake_string}`", ephemeral=False
+            "Let's get building! Retype this:" +
+            f" `{fake_string}`", ephemeral=False
         )
 
         msg = await self.bot.wait_for("message", check=check)
 
         if msg.content == fake_string:
             await msg.reply(
-                "You did terrible by failing to copy someone else's build. You did not earn anything."
+                "You did terrible by failing to copy someone else's build." 
+                + "You did not earn anything."
             )
 
             return
@@ -430,7 +442,9 @@ class Economy(commands.Cog, name="economy"):
 
             if add_item:
                 await msg.reply(
-                    f"Good job! You built something and earnt `{add_copies} copies`, `{add_deletes} deletes` and `{add_reputation} reputation`!\nYou also found `1` `{rarity.upper()}` `{add_item}` while building!"
+                    f"Good job! You built something and earnt `{add_copies} copies`," + 
+                    f"`{add_deletes} deletes` and `{add_reputation} reputation`!\n" + 
+                    f"You also found `1` `{rarity.upper()}` `{add_item}` while building!"
                 )
                 await self.bot.db.economy.update_one(
                     {"discord_id": interaction.user.id},
@@ -438,7 +452,9 @@ class Economy(commands.Cog, name="economy"):
                 )
             else:
                 await msg.reply(
-                    f"Good job! You built something and earnt `{add_copies} copies`, `{add_deletes} deletes` and `{add_reputation} reputation`!"
+                    "Good job!" + 
+                    f" You built something and earnt `{add_copies} copies`," + 
+                    f"`{add_deletes} deletes` and `{add_reputation} reputation`!"
                 )
 
         # last checks
@@ -523,11 +539,13 @@ class Economy(commands.Cog, name="economy"):
             add_deletes = 0
 
             await interaction.response.send_message(
-                f"You've been caught by an admin and your deletes from this griefing session were undone! You also lost `{dec_reputation} reputation`"
+                "You've been caught by an admin and your deletes from this" + 
+                f"griefing session were undone! You also lost `{dec_reputation} reputation`"
             )
         else:
             await interaction.response.send_message(
-                f"You griefed and earnt `{add_deletes} deletes`. You also lost `{dec_reputation} reputation`"
+                f"You griefed and earnt `{add_deletes} deletes`." + 
+                f"You also lost `{dec_reputation} reputation`"
             )
 
         author_data = await self.bot.db.economy.find_one(
@@ -564,7 +582,9 @@ class Economy(commands.Cog, name="economy"):
         random_member = random.choice(interaction.guild.members)
 
         await interaction.response.send_message(
-            f"You reported `{random_member.name}#{random_member.discriminator}` for `{random.choice(['Griefing', 'Trolling', 'Bullying'])}` and received `{round(add_reputation)} reputation`"
+            f"You reported `{random_member.name}#{random_member.discriminator}`" + 
+            f"for `{random.choice(['Griefing', 'Trolling', 'Bullying'])}`" + 
+            f" and received `{round(add_reputation)} reputation`"
         )
 
     @app_commands.command()
@@ -595,7 +615,10 @@ class Economy(commands.Cog, name="economy"):
                 reputation = 0
 
             await interaction.response.send_message(
-                f"You got caught false reporting `{random_member.name}#{random_member.discriminator}` for `{random.choice(['Griefing', 'Trolling', 'Bullying'])}` and lost `{round(reputation)} reputation`"
+                "You got caught false reporting " + 
+                f"`{random_member.name}#{random_member.discriminator}` for" + 
+                f"`{random.choice(['Griefing', 'Trolling', 'Bullying'])}`" + 
+                f"and lost `{round(reputation)} reputation`"
             )
 
             await self.bot.db.economy.update_one(
@@ -607,7 +630,10 @@ class Economy(commands.Cog, name="economy"):
                 reputation = 100 - author_data["reputation"]
 
             await interaction.response.send_message(
-                f"You false reported `{random_member.name}#{random_member.discriminator}` for `{random.choice(['Griefing', 'Trolling', 'Bullying'])}` and received `{round(reputation)} reputation`"
+                "You false reported " + 
+                f"`{random_member.name}#{random_member.discriminator}`" + 
+                f"for `{random.choice(['Griefing', 'Trolling', 'Bullying'])}`" + 
+                f"and received `{round(reputation)} reputation`"
             )
 
             await self.bot.db.economy.update_one(
@@ -694,7 +720,8 @@ class Economy(commands.Cog, name="economy"):
 
         if user_data["reputation"] < 50:
             await interaction.response.send_message(
-                "Your reputation is too low to exchange TempleCoin! Your reputation must be at least 50%",
+                "Your reputation is too low to " + 
+                "exchange TempleCoin! Your reputation must be at least 50%",
                 ephemeral=True,
             )
 
@@ -702,7 +729,10 @@ class Economy(commands.Cog, name="economy"):
 
         if amount is None or amount == 0:
             await interaction.response.send_message(
-                f"You haven't specified how many TempleCoin you want to get\nCurrent exchange rates for TempleCoin:\n1 TempleCoin = `{exchange_values['TempleCoin']['copies']} copies` and `{exchange_values['TempleCoin']['deletes']} deletes`"
+                "You haven't specified how many TempleCoin you want to get\n" +
+                "Current exchange rates for TempleCoin:\n" +
+                f"1 TempleCoin = `{exchange_values['TempleCoin']['copies']} copies` and" +
+                f"`{exchange_values['TempleCoin']['deletes']} deletes`"
             )
 
             return
@@ -731,11 +761,12 @@ class Economy(commands.Cog, name="economy"):
                     "deletes": -deletes_required,
                     "inventory.TempleCoin": amount,
                 }
-            },
-        )
+            },)
 
         await interaction.response.send_message(
-            f"You've exchanged `{copies_required} copies` and `{deletes_required} deletes` for `{amount}` TempleCoin!"
+            f"You've exchanged `{copies_required} copies`" + 
+            "and `{deletes_required} deletes`" + 
+            "for `{amount}` TempleCoin!"
         )
 
         await update_exchange_rates(self.bot)
@@ -762,7 +793,8 @@ class Economy(commands.Cog, name="economy"):
 
         embed = discord.Embed(
             title="Marketplace",
-            description="Welcome to the marketplace!\nTo purchase an item, run `/marketplace buy <listing_id>`",
+            description="Welcome to the marketplace!\nTo purchase an item," +
+            "run `/marketplace buy <listing_id>`",
             colour=Enum.EmbedColors.INFO,
         )
 
@@ -771,8 +803,10 @@ class Economy(commands.Cog, name="economy"):
                 continue
 
             embed.add_field(
-                name=f"{listing['item']} | ID: {listing['listing_id']}",
-                value=f"**Price**: `{listing['price_per_item']} TempleCoins / 1 item`\n**Stock**: `{listing['stock']}`",
+                name=f"{listing['item']} | " +
+                f"ID: {listing['listing_id']}",
+                value=f"**Price**: `{listing['price_per_item']} TempleCoins / 1 item`\n" +
+                f"**Stock**: `{listing['stock']}`",
                 inline=False,
             )
 
@@ -849,7 +883,7 @@ class Economy(commands.Cog, name="economy"):
                 {"listing_id": listing_id}, {"$inc": {"stock": -amount}}
             )
 
-        await self.bot.db.economy.update_one(  # give owner templecoins after their item has been purchased
+        await self.bot.db.economy.update_one(
             {"discord_id": listing["owner"]["discord_id"]},
             {"$inc": {"inventory.TempleCoin": amount * price_per_item}},
         )
@@ -865,7 +899,8 @@ class Economy(commands.Cog, name="economy"):
         )
 
         await interaction.response.send_message(
-            f"You successfully purchased `{amount}` `{item}s` for `{amount * price_per_item} TempleCoins`"
+            f"You successfully purchased `{amount}` `{item}s`" +
+            f"for `{amount * price_per_item} TempleCoins`"
         )
 
     @marketplace_commands.command(
@@ -883,7 +918,8 @@ class Economy(commands.Cog, name="economy"):
 
         if len(await get_marketplace_listings(interaction.user.id)) >= 3:
             await interaction.response.send_message(
-                "You can't have more than 3 listings on the marketplace at once! Unsell one of them and try again",
+                "You can't have more than 3 listings on the marketplace at once!" + 
+                "Unsell one of them and try again",
                 ephemeral=True,
             )
 
@@ -923,7 +959,8 @@ class Economy(commands.Cog, name="economy"):
         ).economy_marketplace(item, amount, price_per_item)
 
         await interaction.response.send_message(
-            f"You successfully listed `{amount}` `{item}s` on the marketplace for `{price_per_item} TempleCoins / 1 item`!\nListing ID: {listing_id}"
+            f"You successfully listed `{amount}` `{item}s` on the marketplace for" +
+            f"`{price_per_item} TempleCoins / 1 item`!\nListing ID: {listing_id}"
         )
 
     @_marketplace_sell.autocomplete("item")
@@ -1012,7 +1049,8 @@ class Economy(commands.Cog, name="economy"):
         for listing in listings:
             embed.add_field(
                 name=f'{listing["item"]} | ID: {listing["listing_id"]}',
-                value=f'**Price**: `{listing["price_per_item"]} / 1 item`\n**Stock**: `{listing["stock"]}`',
+                value=f'**Price**: `{listing["price_per_item"]} / 1 item`\n' +
+                f'**Stock**: `{listing["stock"]}`',
                 inline=False,
             )
 

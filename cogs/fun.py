@@ -1,25 +1,22 @@
 """The fun module of B0BBA"""
 
-import aiofiles
-import time
 import asyncio
-import random
-import discord
 import os
-
+import random
+import time
+from io import BytesIO
 from typing import List
 
+import aiofiles
+import discord
 from discord import app_commands
 from discord.ext import commands
+from PIL import Image, ImageDraw
 
 from games.hangman.game import HangmanGame
 from games.unscramble.game import UnscrambleGame
 from games.wordle.game import WordleGame
-
 from modules.loggers import Logger
-
-from PIL import Image, ImageDraw
-from io import BytesIO
 
 words = []
 with open("./games/words.txt", "r", encoding="utf-8") as f:
@@ -162,11 +159,11 @@ class Fun(commands.Cog, name="fun"):
 
         correct_characters = 0
         total_characters = 0
-        for i in range(len(test_list)):
-            if test_list[i] == msg_split[i]:
-                correct_characters += len(test_list[i]) + 1  # +1 for a space
+        for i, test_lists in enumerate(test_list):
+            if test_lists == msg_split[i]:
+                correct_characters += len(test_lists) + 1  # +1 for a space
 
-            total_characters += len(test_list[i]) + 1
+            total_characters += len(test_lists) + 1
 
         wpm = (correct_characters / 5) / minutes
         raw_wpm = (total_characters / 5) / minutes
@@ -174,7 +171,11 @@ class Fun(commands.Cog, name="fun"):
         accuracy = wpm / raw_wpm
 
         await interaction.followup.send(
-            f"result:\nraw wpm: {round(raw_wpm, 2)}\nwpm: {round(wpm, 2)}\naccuracy: {round(accuracy * 100)}%\n\nnote: between you and the bot there is quite a lot of ping. if you want 100% accurate results, use a website like <https://monkeytype.com>"
+            f"result:\nraw wpm: {round(raw_wpm, 2)}\n" + 
+            f"wpm: {round(wpm, 2)}\naccuracy: {round(accuracy * 100)}%\n" + 
+            "\nnote: between you and the bot there is quite a lot of ping." + 
+            "if you want 100% accurate results," + 
+            "use a website like <https://monkeytype.com>"
         )
 
     @app_commands.command(name="impersonate")
@@ -183,6 +184,7 @@ class Fun(commands.Cog, name="fun"):
     async def impersonate(
         self, interaction: discord.Interaction, member: discord.Member, text: str
     ) -> None:
+        """Impersonates someone"""
         if member.bot:
             await interaction.response.send_message(
                 "Sorry, but you're not allowed to use `/impersonate` on bots!",
@@ -194,7 +196,8 @@ class Fun(commands.Cog, name="fun"):
         webhook = await interaction.channel.create_webhook(name=member.display_name)
 
         message = await webhook.send(
-            f"{text}\n\n**this message is made up by {interaction.user} via the **`/impersonate` **command, please don't take it seriously**",
+            f"{text}\n\n**this message is made up by {interaction.user} via the" + 
+            "**`/impersonate` **command, please don't take it seriously**",
             allowed_mentions=discord.AllowedMentions.none(),
             username=member.display_name,
             avatar_url=member.display_avatar,
@@ -218,6 +221,7 @@ class Fun(commands.Cog, name="fun"):
             await file.write(image)
 
     async def circle_overlay(self, image, overlay_image, mask=None, size: int = 0):
+        """Circle overlay"""
         old_size = image.size
         new_size = (265 + size, 265 + size)
         overlay_image = overlay_image.resize(new_size)
@@ -316,4 +320,9 @@ class Fun(commands.Cog, name="fun"):
 
 
 async def setup(bot):
+    """The setup function for the moderation module
+
+    Args:
+        bot (discord.Bot): The bot object
+    """
     await bot.add_cog(Fun(bot))
