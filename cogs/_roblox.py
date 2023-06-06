@@ -91,8 +91,8 @@ class Roblox(commands.Cog, name="roblox"):
 
             except roblox.UserNotFound:  # pylint:disable=no-member
                 await message.channel.send(
-                    f"{message.channel.owner.mention}, the user you specified as this post" + 
-                    "name was not found! This post will be deleted in 10 seconds."
+                    f"{message.channel.owner.mention}, the user you specified as this post's "
+                    + " name was not found! This post will be deleted in 10 seconds."
                 )
 
                 await asyncio.sleep(10)
@@ -125,12 +125,12 @@ class Roblox(commands.Cog, name="roblox"):
             )
             embed.add_field(
                 name="Roblox",
-                value=f"**ID:** `{registration['roblox_id']}`\n" +
-                f"**Username:** `{target_user_roblox.name}`\n" +
-                "**Registered On:**" + 
-                f"<t:{int(_time.mktime(created_on.utctimetuple()))}:F> " + 
-                f"`({round((_time.time() - _time.mktime(created_on.utctimetuple())) / 86400)}" + 
-                "days)`",
+                value=f"**ID:** `{registration['roblox_id']}`\n"
+                + f"**Username:** `{target_user_roblox.name}`\n"
+                + "**Registered On:**"
+                + f" <t:{int(_time.mktime(created_on.utctimetuple()))}:F> "
+                + f"`({round((_time.time() - _time.mktime(created_on.utctimetuple())) / 86400)}"
+                + "days)`",
             )
 
             user_icon_url = (
@@ -297,8 +297,8 @@ class Roblox(commands.Cog, name="roblox"):
                 case _:
                     embed = discord.Embed(
                         title="Exception",
-                        description="There was an error while trying to get server" +
-                        f"info!\nStatus code: {exc.status}",
+                        description="There was an error while trying to get server"
+                        + f" info!\nStatus code: {exc.status}",
                         colour=Enum.EmbedColors.EXCEPTION.value,
                     )
 
@@ -344,8 +344,8 @@ class Roblox(commands.Cog, name="roblox"):
 
         if interaction.channel.parent_id != 1063317564207403008:
             await interaction.response.send_message(
-                "This is the wrong channel for this command!" + 
-                "Use it in a post in <#1063317564207403008>"
+                "This is the wrong channel for this command!"
+                + " Use it in a post in <#1063317564207403008>"
             )
             return
 
@@ -377,8 +377,8 @@ class Roblox(commands.Cog, name="roblox"):
             await interaction.channel.owner.send(embed=embed)
         except discord.Forbidden:
             await interaction.channel.send(
-                f"<@{interaction.channel.owner_id}>, your DMs are closed," +
-                " so I pinged you for your report!"
+                f"<@{interaction.channel.owner_id}>, your DMs are closed,"
+                + " so I pinged you for your report!"
             )
 
         starter_message = [
@@ -440,8 +440,8 @@ class Roblox(commands.Cog, name="roblox"):
 
         if not await Registration(admin.id).check_registration("admins"):
             await interaction.response.send_message(
-                "This admin is not in the admin collection, please add them with the" + 
-                "`/management add_admin` command, or wait until they have a report closed."
+                "This admin is not in the admin collection, please add them with the"
+                + " `/management add_admin` command, or wait until they have a report closed."
             )
             return
 
@@ -473,9 +473,9 @@ class Roblox(commands.Cog, name="roblox"):
             bonus = BONUSES[role_in_group.rank]
 
         await interaction.response.send_message(
-            "The calculated payout for this admin is:" +
-            "\n{registration['payout']}" +
-            f"+ {bonus} BONUS = __{registration['payout'] + bonus} Robux__"
+            "The calculated payout for this admin is:"
+            + f"\n{registration['payout']}"
+            + f" + {bonus} BONUS = __{registration['payout'] + bonus} Robux__"
         )
 
     @management_commands.command()
@@ -493,8 +493,8 @@ class Roblox(commands.Cog, name="roblox"):
 
         if not await Registration(admin.id).check_registration("admins"):
             await interaction.response.send_message(
-                "This user is not in the admin collection, please add them with the" + 
-                "`/management add_admin` command, or wait until they have a report closed."
+                "This user is not in the admin collection, please add them with the"
+                + " `/management add_admin` command, or wait until they have a report closed."
             )
             return
 
@@ -586,9 +586,9 @@ class Roblox(commands.Cog, name="roblox"):
 
         if not await Registration(admin.id).check_registration("admins"):
             await interaction.response.send_message(
-                "This user is not in the admin collection," +
-                "please add them with the" +
-                " `/management add_admin` command, or wait until they have a report closed."
+                "This user is not in the admin collection,"
+                + " please add them with the"
+                + " `/management add_admin` command, or wait until they have a report closed."
             )
             return
 
@@ -670,8 +670,8 @@ class Roblox(commands.Cog, name="roblox"):
 
         if not verified:
             await interaction.response.send_message(
-                "You can't run this command because your account isn't verified!" + 
-                "Run `/verify` with your ROBLOX username"
+                "You can't run this command because your account isn't verified!"
+                + " Run `/verify` with your ROBLOX username"
             )
             return
 
@@ -691,14 +691,14 @@ class Roblox(commands.Cog, name="roblox"):
             Logger.RobloxMod.GlobalMessage.Failure(
                 interaction.user,
                 message,
-                "Roblox API didn't return 200. More info:\n" +
-                f"{result['response'].status}\n{result['json']}",
+                "Roblox API didn't return 200. More info:\n"
+                + f"{result['response'].status}\n{result['json']}",
             )
 
             embed = discord.Embed(
                 title="Game Global Message",
-                description="message send failure:\nstatus:" +
-                f"{result.status}\n\n<@804066391614423061>",
+                description="message send failure:\nstatus:"
+                + f"{result.status}\n\n<@804066391614423061>",
                 colour=Enum.EmbedColors.ERROR.value,
             )
 
@@ -738,8 +738,8 @@ class Roblox(commands.Cog, name="roblox"):
         verified = await check_link(interaction.user.id)
         if not verified:
             await interaction.response.send_message(
-                "You can't run this command because your admin account isn't verified!" + 
-                "Run `/verify` with your ROBLOX username"
+                "You can't run this command because your admin account isn't verified!"
+                + " Run `/verify` with your ROBLOX username"
             )
             return
 
@@ -802,8 +802,8 @@ class Roblox(commands.Cog, name="roblox"):
         verified = await check_link(interaction.user.id)
         if not verified:
             await interaction.response.send_message(
-                "You can't run this command because your admin account isn't verified!" + 
-                "Run `/verify` with your ROBLOX username"
+                "You can't run this command because your admin account isn't verified!"
+                + " Run `/verify` with your ROBLOX username"
             )
             return
 
@@ -857,8 +857,8 @@ class Roblox(commands.Cog, name="roblox"):
         verified = await check_link(interaction.user.id)
         if not verified:
             await interaction.response.send_message(
-                "You can't run this command because your admin account isn't verified!" + 
-                "Run `/verify` with your ROBLOX username"
+                "You can't run this command because your admin account isn't verified!"
+                + " Run `/verify` with your ROBLOX username"
             )
             return
 
@@ -903,8 +903,8 @@ class Roblox(commands.Cog, name="roblox"):
         verified = await check_link(interaction.user.id)
         if not verified:
             await interaction.response.send_message(
-                "You can't run this command because your admin account isn't verified!" + 
-                "Run `/verify` with your ROBLOX username"
+                "You can't run this command because your admin account isn't verified!"
+                + " Run `/verify` with your ROBLOX username"
             )
             return
 
@@ -944,5 +944,5 @@ async def setup(bot):
 
     Args:
         bot (discord.Bot): The bot class
-    """   
+    """
     await bot.add_cog(Roblox(bot))
