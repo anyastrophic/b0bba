@@ -25,7 +25,6 @@ BOT = None
 
 class Server(BaseModel):
     """Server data sent from ROBLOX"""
-
     age: float | int | None
     players: dict | list
     fps: float | int | None
