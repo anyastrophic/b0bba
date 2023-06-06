@@ -793,7 +793,8 @@ class Economy(commands.Cog, name="economy"):
 
         embed = discord.Embed(
             title="Marketplace",
-            description="Welcome to the marketplace!\nTo purchase an item, run `/marketplace buy <listing_id>`",
+            description="Welcome to the marketplace!\n" +
+            "To purchase an item, run `/marketplace buy <listing_id>`",
             colour=Enum.EmbedColors.INFO.value,
         )
 
