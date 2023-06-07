@@ -389,6 +389,7 @@ class Roblox(commands.Cog, name="roblox"):
         await Registration(interaction.user.id).reports(
             interaction.channel_id,
             starter_message.content,
+            verdict,
             interaction.user,
             interaction.channel.owner,
             await self.roblox_client.get_user_by_username(interaction.channel.name),

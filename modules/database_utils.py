@@ -140,6 +140,7 @@ class Registration:
         self,
         report_id: int,
         report_description: str,
+        verdict: str,
         closed_by: discord.User,
         report_creator: discord.User,
         reported_user: roblox.users.User,
@@ -161,6 +162,7 @@ class Registration:
                 "report_id": report_id,  # snowflake id of the post
                 "report_description": report_description,  # Content of the message
                 "report_metadata": {
+                    "verdict": verdict,
                     "created_at": time.time(),  # unix timestamp
                     "closed_by": {
                         "discord_id": closed_by.id,  # snowflake id
