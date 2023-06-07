@@ -163,6 +163,8 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     from main import bot
 
+    print(bot.get_guild(406995309000916993))
+
     _ = (
         bot.ub_guild.members
     )  # this is just to cache everyone, so the below doesn't return an error
