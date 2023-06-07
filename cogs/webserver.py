@@ -22,9 +22,15 @@ API_KEY = os.environ.get("B0BBA_API_KEY")
 
 BOT = None
 
+if not BOT:
+    from main import bot
+
+    BOT = bot
+
 
 class Server(BaseModel):
     """Server data sent from ROBLOX"""
+
     age: float | int | None
     players: dict | list
     fps: float | int | None
