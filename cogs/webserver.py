@@ -1,16 +1,19 @@
 """The webserver module of B0BBA"""
 
-import asyncio
-import json
-import os
 import secrets
+import asyncio
+import os
 
+import json
 import discord
 import git
-from discord.ext import commands
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
+
+from discord.ext import commands
 
 from modules.database_utils import Registration
 
@@ -19,6 +22,8 @@ request_queue = {}
 app = FastAPI()
 
 API_KEY = os.environ.get("B0BBA_API_KEY")
+
+BOT = None
 
 
 class Server(BaseModel):
@@ -40,7 +45,11 @@ class Webserver(commands.Cog, name="webserver"):
     """The class containing the webserver functions"""
 
     def __init__(self, _bot):
+        global BOT  # pylint: disable=global-statement
+
         self.bot = _bot
+
+        BOT = _bot
 
 
 async def create_request(_type: str, job_id: str = "global"):
@@ -60,9 +69,7 @@ async def create_request(_type: str, job_id: str = "global"):
 
     request_queue[request_id] = {"callback": callback, "response": None}
 
-    from main import bot
-
-    await bot.roblox_universe.publish_message(
+    await BOT.roblox_universe.publish_message(
         "global",
         json.dumps(
             {
@@ -161,16 +168,12 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     await Registration(discord_id, roblox_id).links()
 
-    from main import bot
-
-    print(bot.get_guild(406995309000916993))
-
     _ = (
-        bot.ub_guild.members
+        BOT.ub_guild.members
     )  # this is just to cache everyone, so the below doesn't return an error
 
-    member: discord.Member = bot.ub_guild.get_member(discord_id)
-    role: discord.Role = bot.ub_guild.get_role(406997457709432862)
+    member: discord.Member = BOT.ub_guild.get_member(discord_id)
+    role: discord.Role = BOT.ub_guild.get_role(406997457709432862)
 
     if role not in member.roles:
         await member.add_roles(role)
