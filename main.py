@@ -93,6 +93,8 @@ async def on_application_command_error(ctx, error):
 
 @bot.event
 async def on_ready():
+    global UB_GUILD
+
     db_name = "b0bba" if os.environ.get("B0BBA_VERSION") == "test" else "b0bba"
     bot.db = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")[
         db_name
@@ -110,6 +112,8 @@ async def on_ready():
     channels["payout-logs"] = ub_guild.get_channel(1100275071186128987)
     channels["server-logs"] = ub_guild.get_channel(1054078855066964018)
     channels["bot-logs"] = ub_guild.get_channel(1109013973745016843)
+
+    UB_GUILD = ub_guild
 
     bot.ub_channels = channels
     bot.ub_guild = UB_GUILD
