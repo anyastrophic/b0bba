@@ -100,11 +100,6 @@ async def on_ready():
         db_name
     ]
 
-    config = Config(app=app, host="0.0.0.0", port=80)
-    server = Server(config)
-
-    bot.loop.create_task(server.serve())
-
     ub_guild = bot.get_guild(406995309000916993)
 
     channels = {}
@@ -121,6 +116,11 @@ async def on_ready():
     bot.tree.on_error = on_application_command_error
 
     await bot.load_extension("jishaku")
+
+    config = Config(app=app, host="0.0.0.0", port=80)
+    server = Server(config)
+
+    bot.loop.create_task(server.serve())
 
 
 if __name__ == "__main__":
