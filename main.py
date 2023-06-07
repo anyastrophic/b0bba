@@ -14,7 +14,7 @@ from datetime import datetime
 
 from typing import Any, Coroutine
 
-from modules.error_handler import error_handler, legacy_error_handler
+from modules.error_handler import error_handler
 from modules.help_command import HelpCommand
 from modules.loggers import (
     _DiscordColorFormatter,
