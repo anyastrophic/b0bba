@@ -23,6 +23,10 @@ app = FastAPI()
 
 API_KEY = os.environ.get("B0BBA_API_KEY")
 
+BOT = None
+
+print("hi")
+
 
 class Server(BaseModel):
     """Server data sent from ROBLOX"""
@@ -149,10 +153,7 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     Returns:
         JSONResponse: The response
-
     """
-    global BOT
-
     headers = request.headers
 
     roblox_id = int(verification_request.roblox_id)
