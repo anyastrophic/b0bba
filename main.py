@@ -91,17 +91,27 @@ async def on_application_command_error(ctx, error):
     await error_handler(bot, ctx, error)
 
 
+first_load = True
+
+
 @bot.event
 async def on_ready():
+    global first_load
+
     db_name = "b0bba" if os.environ.get("B0BBA_VERSION") == "test" else "b0bba"
     bot.db = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")[
         db_name
     ]
 
-    config = Config(app=app, host="0.0.0.0", port=80)
-    server = Server(config)
+    if first_load == True:
+        from cogs.webserver import app
 
-    bot.loop.create_task(server.serve())
+        config = Config(app=app, host="0.0.0.0", port=80)
+        server = Server(config)
+
+        bot.loop.create_task(server.serve())
+
+        first_load = False
 
     ub_guild = bot.get_guild(406995309000916993)
     bot.ub_guild = UB_GUILD
