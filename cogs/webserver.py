@@ -25,8 +25,6 @@ API_KEY = os.environ.get("B0BBA_API_KEY")
 
 BOT = None
 
-print("hi")
-
 
 class Server(BaseModel):
     """Server data sent from ROBLOX"""
@@ -41,6 +39,17 @@ class VerificationRequest(BaseModel):
 
     roblox_id: str
     discord_id: str
+
+
+class Webserver(commands.Cog, name="webserver"):
+    """The class containing the webserver functions"""
+
+    def __init__(self, _bot):
+        global BOT  # pylint: disable=global-statement
+
+        self.bot = _bot
+
+        BOT = _bot
 
 
 async def create_request(_type: str, job_id: str = "global"):
@@ -170,18 +179,6 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
         await member.add_roles(role)
 
     return JSONResponse(content={"message": "OK"}, status_code=200)
-
-
-class Webserver(commands.Cog, name="webserver"):
-    """The class containing the webserver functions"""
-
-    def __init__(self, _bot):
-        global BOT  # pylint: disable=global-statement
-
-        self.bot = _bot
-
-        if _bot is not None:
-            BOT = _bot
 
 
 async def setup(bot):
