@@ -51,7 +51,8 @@ class Webserver(commands.Cog, name="webserver"):
 
         self.bot = _bot
 
-        BOT = _bot
+        if _bot is not None:
+            BOT = _bot
 
 
 async def create_request(_type: str, job_id: str = "global"):
