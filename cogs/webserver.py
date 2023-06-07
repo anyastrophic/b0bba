@@ -23,8 +23,6 @@ app = FastAPI()
 
 API_KEY = os.environ.get("B0BBA_API_KEY")
 
-BOT = None
-
 
 class Server(BaseModel):
     """Server data sent from ROBLOX"""
