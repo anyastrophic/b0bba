@@ -109,6 +109,7 @@ async def on_ready():
     channels["bot-logs"] = ub_guild.get_channel(1109013973745016843)
 
     bot.ub_channels = channels
+    bot.ub_guild = UB_GUILD
 
     bot.tree.on_error = on_application_command_error
 
