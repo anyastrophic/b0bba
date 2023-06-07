@@ -12,7 +12,6 @@ from discord.flags import Intents
 from uvicorn import Config, Server
 
 import modules.requests
-from cogs.webserver import app
 from modules.error_handler import error_handler
 from modules.get_setup import get_setup
 from modules.help_command import HelpCommand
@@ -22,8 +21,6 @@ from modules.loggers import (
     _ColourFormatter,
     _DiscordColorFormatter,
 )
-
-UB_GUILD = discord.Object(id=406995309000916993)
 
 
 class Bot(discord.ext.commands.Bot):
@@ -114,7 +111,7 @@ async def on_ready():
         first_load = False
 
     ub_guild = bot.get_guild(406995309000916993)
-    bot.ub_guild = UB_GUILD
+    bot.ub_guild = ub_guild
 
     channels = {}
     channels["report-logs"] = ub_guild.get_channel(1100245620612137022)
