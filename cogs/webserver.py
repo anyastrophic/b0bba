@@ -151,7 +151,10 @@ async def verify_endpoint(request: Request, verification_request: VerificationRe
 
     Returns:
         JSONResponse: The response
+
     """
+    global BOT
+
     headers = request.headers
 
     roblox_id = int(verification_request.roblox_id)
