@@ -643,6 +643,8 @@ class Roblox(commands.Cog, name="roblox"):
         if not self.is_payout_manager(interaction.user):
             return
 
+        await interaction.response.defer()
+
         admins = ""
 
         bonuses = {
@@ -675,7 +677,7 @@ class Roblox(commands.Cog, name="roblox"):
             user = await self.bot.fetch_user(admin_id)
             admins += f"The payout for **{user}** is: {document['payout'] + bonus}\n"
 
-        await interaction.response.send_message(admins)
+        await interaction.followup.send(admins)
 
     robloxmod_commands = app_commands.Group(
         name="robloxmod", description="Commands for Roblox moderations"
