@@ -156,10 +156,15 @@ class Roblox(commands.Cog, name="roblox"):
             username, exclude_banned_users=True
         )
 
-        if await Registration(interaction.user.id).check_registration(
-            "links"
-        ) or await Registration(user.id).check_registration("links", "roblox_id"):
+        if await Registration(interaction.user.id).check_registration("links"):
             await interaction.response.send_message("Your account is already verified!")
+            return
+
+        if await Registration(user.id).check_registration("links", "roblox_id"):
+            await interaction.response.send_message(
+                "This roblox account is already" +
+                " verified under a different discord account!"
+            )
             return
 
         if (
