@@ -99,7 +99,9 @@ class Roblox(commands.Cog, name="roblox"):
                 await message.channel.delete()
 
     @app_commands.command()
-    async def whois(self, interaction: discord.Interaction, user: discord.User = None):
+    async def whois(
+        self, interaction: discord.Interaction, user: discord.User | str = None
+    ):
         """query bot's data about a DISCORD user"""
 
         snowflake_id = None
@@ -162,8 +164,8 @@ class Roblox(commands.Cog, name="roblox"):
 
         if await Registration(user.id).check_registration("links", "roblox_id"):
             await interaction.response.send_message(
-                "This roblox account is already" +
-                " verified under a different discord account!"
+                "This roblox account is already"
+                + " verified under a different discord account!"
             )
             return
 
