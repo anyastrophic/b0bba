@@ -658,6 +658,9 @@ class Roblox(commands.Cog, name="roblox"):
         _list = await result.to_list(100)
 
         for document in _list:
+            if document["payout"] == 0:
+                continue
+            
             admin_id = document["discord_id"]
 
             link = await check_link(admin_id)
