@@ -9,7 +9,9 @@ async def get_csrf(client):
         headers={"Cookie": f".ROBLOSECURITY={COOKIE}"},
     )
 
-    csrf_token = result.get("x-csrf-token")
+    json = result.json.as_dict()
+
+    csrf_token = json.get("x-csrf-token")
 
     assert csrf_token is not None, "csrf token is None"
 

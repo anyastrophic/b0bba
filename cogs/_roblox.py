@@ -479,9 +479,10 @@ class Roblox(commands.Cog, name="roblox"):
             bonus = BONUSES[role_in_group.rank]
 
         await interaction.response.send_message(
-            "The calculated payout for this admin is:"
+            f"The calculated payout for {admin.mention} is:"
             + f"\n{registration['payout']}"
-            + f" + {bonus} BONUS = __{registration['payout'] + bonus} Robux__"
+            + f" + {bonus} BONUS = __{registration['payout'] + bonus} Robux__",
+            allowed_mentions=discord.AllowedMentions.none(),
         )
 
     @management_commands.command()
@@ -644,12 +645,35 @@ class Roblox(commands.Cog, name="roblox"):
 
         admins = ""
 
+        bonuses = {
+            6: 25,
+            7: 50,
+            8: 75,
+            9: 100,
+        }
+
         result = self.bot.db.admins.find({}, {})
         _list = await result.to_list(100)
 
         for document in _list:
-            user = await self.bot.fetch_user(document["discord_id"])
-            admins += f"Should you payout **{user}**: {document['payout']>0}\n"
+            admin_id = document["discord_id"]
+
+            link = await check_link(admin_id)
+            assert link is not None, f"link is None (is <@{admin_id}> verified?)"
+
+            group_member = self.group.get_member(link["roblox_id"])
+            role_in_group = await group_member.get_role()
+            assert (
+                role_in_group is not None
+            ), f"role in group is None (is <@{admin_id}> in the roblox group?)"
+
+            bonus = 0
+
+            if role_in_group.rank in bonuses:
+                bonus = bonuses[role_in_group.rank]
+
+            user = await self.bot.fetch_user(admin_id)
+            admins += f"The payout for **{user}** is: {document['payout'] + bonus}\n"
 
         await interaction.response.send_message(admins)
 
