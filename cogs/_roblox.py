@@ -645,7 +645,7 @@ class Roblox(commands.Cog, name="roblox"):
 
         await interaction.response.defer()
 
-        admins = ""
+        admins = "Below are the payouts for the admins. Bonus is included\n"
 
         bonuses = {
             6: 25,
@@ -675,7 +675,7 @@ class Roblox(commands.Cog, name="roblox"):
                 bonus = bonuses[role_in_group.rank]
 
             user = await self.bot.fetch_user(admin_id)
-            admins += f"The payout for **{user}** is: {document['payout'] + bonus}\n"
+            admins += f"**{user}**: __**{document['payout'] + bonus} Robux**__\n"
 
         await interaction.followup.send(admins)
 
