@@ -99,9 +99,7 @@ class Roblox(commands.Cog, name="roblox"):
                 await message.channel.delete()
 
     @app_commands.command()
-    async def whois(
-        self, interaction: discord.Interaction, user: discord.User | str = None
-    ):
+    async def whois(self, interaction: discord.Interaction, user: discord.User = None):
         """query bot's data about a DISCORD user"""
 
         snowflake_id = None
