@@ -75,8 +75,7 @@ class ContextMenus(commands.Cog):
             embed.add_field(
                 name="Roblox",
                 value=f"**ID:** `{registration['roblox_id']}`\n" +
-                f"**Profile link:** [Click me](https://www.roblox.com/users/{target_user_roblox.name}/profile)\n" + 
-                f"**Username:** `{target_user_roblox.name}`\n" + 
+                f"**User:** [`{target_user_roblox.name}`](https://www.roblox.com/users/{registration['roblox_id']}/profile)\n" + 
                 f"**Registered On:** <t:{int(time.mktime(created_on.utctimetuple()))}:F>" +
                 f"`({round((time.time() - time.mktime(created_on.utctimetuple())) / 86400)} days)`",
             )
