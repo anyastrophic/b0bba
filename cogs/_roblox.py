@@ -125,12 +125,10 @@ class Roblox(commands.Cog, name="roblox"):
             )
             embed.add_field(
                 name="Roblox",
-                value=f"**ID:** `{registration['roblox_id']}`\n"
-                + f"**Username:** `{target_user_roblox.name}`\n"
-                + "**Registered On:**"
-                + f" <t:{int(_time.mktime(created_on.utctimetuple()))}:F> "
-                + f"`({round((_time.time() - _time.mktime(created_on.utctimetuple())) / 86400)}"
-                + "days)`",
+                value=f"**ID:** `{registration['roblox_id']}`\n" +
+                f"**User:** [`{target_user_roblox.name}`](https://www.roblox.com/users/{registration['roblox_id']}/profile)\n" + 
+                f"**Registered On:** <t:{int(_time.mktime(created_on.utctimetuple()))}:F>" +
+                f"`({round((_time.time() - _time.mktime(created_on.utctimetuple())) / 86400)} days)`",
             )
 
             user_icon_url = (
